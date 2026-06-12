@@ -3,7 +3,6 @@ import { AnimatePresence } from 'framer-motion'
 import EnvelopeIntro from './components/EnvelopeIntro.jsx'
 import { AttendeesSlider } from './components/AttendeesSlider.tsx'
 import InviteContent from './components/InviteContent.jsx'
-import ClickSound from './components/ClickSound.jsx'
 import RulesShowcase from './components/RulesShowcase.jsx'
 
 const FAQS = [
@@ -24,9 +23,6 @@ export default function App() {
 
   return (
     <>
-      {/* pickleball "pock" on every click */}
-      <ClickSound />
-
       {/* THE ENVELOPE — the landing moment */}
       <AnimatePresence>
         {!opened && <EnvelopeIntro key="intro" onDone={() => setOpened(true)} />}
