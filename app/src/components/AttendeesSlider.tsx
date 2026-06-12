@@ -44,7 +44,7 @@ export function AttendeesSlider() {
                 className={tile.className}
               />
             ) : (
-              <span className='whitespace-nowrap rounded-md border border-dashed border-[#f0c9ab] bg-[#fdf3ec] px-3 py-1.5 text-xs font-semibold text-[#D7632B]'>
+              <span className='whitespace-nowrap rounded-md border border-dashed border-[#f3cdb0] bg-[#fdf3ec] px-3 py-1.5 text-xs font-semibold text-[#EC7031]'>
                 {tile.label}
               </span>
             )}
@@ -52,14 +52,14 @@ export function AttendeesSlider() {
         ))}
       </InfiniteSlider>
       <ProgressiveBlur
-        className='pointer-events-none absolute top-0 left-0 h-full w-[160px]'
+        className='pointer-events-none absolute top-0 left-0 h-full w-[48px] sm:w-[90px]'
         direction='left'
-        blurIntensity={1}
+        blurIntensity={0.5}
       />
       <ProgressiveBlur
-        className='pointer-events-none absolute top-0 right-0 h-full w-[160px]'
+        className='pointer-events-none absolute top-0 right-0 h-full w-[48px] sm:w-[90px]'
         direction='right'
-        blurIntensity={1}
+        blurIntensity={0.5}
       />
     </div>
   );

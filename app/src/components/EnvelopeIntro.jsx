@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import envelopeUrl from '../assets/envelope.svg'
+import InviteContent from './InviteContent.jsx'
 
 const EASE_OUT = [0.22, 1, 0.36, 1]
 
 /*
- * The landing moment, staged like a real envelope:
- *   1. click → the orange flap hinges up and back (3D, on its top edge)
- *   2. the paper slides straight up out of the open envelope
- *   3. the paper grows until it fills the screen — the page IS the paper
+ * The landing moment, staged like a real envelope — ONE STEP AT A TIME:
+ *   1. flap  → the orange flap hinges up and back, ON TOP of the paper
+ *   2. rising → only once the flap is fully open does the paper slide ALL THE
+ *               WAY out (its bottom clears the envelope) IN FRONT of the flap
+ *   3. growing → the fully-emerged paper grows to fill the screen
  *
  * The flat invitation SVG is split into live layers with clip-paths:
  * flap (top triangle, tip at 63% height), pocket (the rest), and a
@@ -19,10 +21,11 @@ export default function EnvelopeIntro({ onDone }) {
   const paperRef = useRef(null)
   // px geometry for the rise + grow-to-fullscreen, measured at click time
   const geo = useRef({ riseY: -260, x: 0, y: -380, scale: 4 })
-  const [stage, setStage] = useState('closed') // closed | opening | growing
-  // once the flap has swung past edge-on, the paper renders ABOVE it
-  const [paperFront, setPaperFront] = useState(false)
+  const [stage, setStage] = useState('closed') // closed | flap | rising | settle | growing
   const opening = stage !== 'closed'
+  const flapOpen = opening                     // flap is open from 'flap' onward
+  const emerged = stage === 'rising' || stage === 'settle' || stage === 'growing'
+  const onTop = stage === 'settle' || stage === 'growing' // paper resting in front
   const growing = stage === 'growing'
 
   // lock page scroll while the envelope is on screen
@@ -40,20 +43,27 @@ export default function EnvelopeIntro({ onDone }) {
     const rect = paperRef.current.getBoundingClientRect()
     const vw = window.innerWidth
     const vh = window.innerHeight
-    const riseY = -0.72 * rect.height
+    // lift the paper until its BOTTOM clears the envelope's top edge — fully out
+    const stageEl = paperRef.current.closest('.intro__stage')
+    const stageTop = stageEl ? stageEl.getBoundingClientRect().top : rect.top
+    const riseY = -(rect.bottom - stageTop) - 8
+    // grow starts from the SETTLED position (paper back at y:0, centred on the
+    // envelope) — so center that resting paper into the viewport, then scale
     const cx = rect.x + rect.width / 2
-    const cy = rect.y + rect.height / 2 + riseY
+    const cy = rect.y + rect.height / 2
     geo.current = {
       riseY,
-      x: vw / 2 - cx,
-      y: riseY + (vh / 2 - cy),
+      growX: vw / 2 - cx,
+      growY: vh / 2 - cy,
       scale: Math.max(vw / rect.width, vh / rect.height) * 1.06,
     }
 
-    setStage('opening')
-    setTimeout(() => setPaperFront(true), 430)
-    setTimeout(() => setStage('growing'), 1500)
-    setTimeout(onDone, 2750)
+    // sequential, but snappy — the paper doesn't dawdle inside the envelope
+    setStage('flap')                                   // 1. flap opens (on top)
+    setTimeout(() => setStage('rising'), 520)           // 2. paper rises fully out (up)
+    setTimeout(() => setStage('settle'), 1240)          // 3. comes back down ONTO the envelope
+    setTimeout(() => setStage('growing'), 1760)         // 4. then zoom to fill screen
+    setTimeout(onDone, 2680)
   }
 
   return (
@@ -61,7 +71,7 @@ export default function EnvelopeIntro({ onDone }) {
       className="intro"
       initial={{ opacity: 1 }}
       animate={{ opacity: growing ? 0 : 1 }}
-      transition={growing ? { delay: 0.85, duration: 0.35, ease: 'easeOut' } : { duration: 0 }}
+      transition={growing ? { delay: 0.62, duration: 0.32, ease: 'easeOut' } : { duration: 0 }}
       exit={{ opacity: 0, transition: { duration: 0.25 } }}
       style={{ pointerEvents: opening ? 'none' : 'auto' }}
     >
@@ -104,17 +114,23 @@ export default function EnvelopeIntro({ onDone }) {
             <div className="env3d__interior" />
 
             {/* the orange flap — hinges open on its top edge and STAYS open
-                (cream inner face showing) while the paper comes out */}
+                (cream inner face showing) while the paper comes out.
+                NOTE: never animate opacity on this node. It has
+                transform-style: preserve-3d, and any opacity < 1 flattens the
+                3D context — which hides the cream back face and flashes the
+                orange front. So the flap keeps full opacity (cream) and is
+                simply covered by the growing paper, then removed with the
+                whole intro fade. */}
             <motion.div
               className="env3d__flap"
-              style={{ transformPerspective: 1100 }}
-              animate={{
-                rotateX: opening ? -168 : 0,
-                opacity: growing ? 0 : 1,
-              }}
+              /* while opening (closed→flap) the flap stays ON TOP (z5) so it
+                 covers the paper that's still inside. Only once the paper
+                 starts rising does the flap drop behind it (z1), so the
+                 invitation emerges in front of the open flap. */
+              style={{ transformPerspective: 1100, zIndex: emerged ? 1 : 5 }}
+              animate={{ rotateX: flapOpen ? -168 : 0 }}
               transition={{
-                rotateX: opening ? { duration: 0.85, ease: 'easeInOut' } : { duration: 0 },
-                opacity: { duration: 0.45, delay: growing ? 0.1 : 0 },
+                rotateX: flapOpen ? { duration: 0.48, ease: 'easeInOut' } : { duration: 0 },
               }}
             >
               <img className="env3d__flap-front" src={envelopeUrl} alt="" />
@@ -125,42 +141,36 @@ export default function EnvelopeIntro({ onDone }) {
             <motion.div
               ref={paperRef}
               className="intro__paper"
-              style={{ zIndex: paperFront ? 6 : 2 }}
+              /* behind the envelope body while rising out (emerges from inside),
+                 then comes to the FRONT when it settles down onto the envelope
+                 and stays in front through the grow. */
+              style={{ zIndex: onTop ? 6 : 2 }}
               animate={
                 growing
-                  ? { x: geo.current.x, y: geo.current.y, scale: geo.current.scale, borderRadius: 0 }
-                  : opening
-                    ? { y: geo.current.riseY, scale: 1 }
-                    : { y: 0, scale: 1 }
+                  ? { x: geo.current.growX, y: geo.current.growY, scale: geo.current.scale, borderRadius: 0 }
+                  : stage === 'settle'
+                    ? { x: 0, y: 0, scale: 1 }            // back down onto the envelope
+                    : stage === 'rising'
+                      ? { y: geo.current.riseY, scale: 1 } // up and fully out
+                      : { y: 0, scale: 1 }                 // closed / flap — inside
               }
               transition={
                 growing
-                  ? { duration: 0.85, ease: [0.4, 0, 0.2, 1] }
-                  : opening
-                    ? { delay: 0.6, duration: 0.9, ease: EASE_OUT }
-                    : { duration: 0 }
+                  ? { duration: 0.8, ease: [0.4, 0, 0.2, 1] }
+                  : stage === 'settle'
+                    ? { duration: 0.45, ease: EASE_OUT }
+                    : stage === 'rising'
+                      ? { duration: 0.62, ease: EASE_OUT }
+                      : { duration: 0 }
               }
               aria-hidden="true"
             >
-              <motion.div
-                className="intro__paper-content"
-                animate={{ opacity: growing ? 0 : 1 }}
-                transition={{ duration: 0.25 }}
-              >
-                <svg className="intro__paper-flourish" viewBox="0 0 240 18" aria-hidden="true">
-                  <line x1="6" y1="9" x2="100" y2="9" stroke="currentColor" strokeWidth="1.2" />
-                  <circle cx="120" cy="9" r="6.5" fill="#EE7230" />
-                  <circle cx="117" cy="6.8" r="1.2" fill="#FDFAF4" />
-                  <circle cx="123" cy="6.8" r="1.2" fill="#FDFAF4" />
-                  <circle cx="120" cy="11.6" r="1.2" fill="#FDFAF4" />
-                  <line x1="140" y1="9" x2="234" y2="9" stroke="currentColor" strokeWidth="1.2" />
-                </svg>
-                <span className="eyebrow">You're cordially invited to</span>
-                <span className="logo-bos intro__paper-logo" aria-hidden="true" />
-                <p className="intro__paper-meta">
-                  Thursday, July 9, 2026<br />DinkSF · San Francisco
-                </p>
-              </motion.div>
+              {/* exactly the same content as the hero card (shared component),
+                  so the zoom reads as "zooming into this invitation" and
+                  crossfades seamlessly into the real card */}
+              <div className="intro__paper-content">
+                <InviteContent />
+              </div>
             </motion.div>
 
             {/* the envelope body in front — the paper emerges from behind it */}

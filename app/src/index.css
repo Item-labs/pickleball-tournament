@@ -5,20 +5,28 @@
    ============================================================ */
 
 :root {
-  --orange:      #EE7230;
-  --orange-dark: #D7632B;
+  --orange:      #EC7031;
+  --orange-dark: #EC7031;
   --ink:         #0D262E;
   --muted:       #6b7280;
   --line:        #ececec;
-  --panel:       #fafafa;
+  --panel:       #ffffff;
   --paper:       #ffffff;
 
-  --maxw: 940px;
+  --maxw: 1180px;
   --radius: 14px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
+
+/* Manrope everywhere — including form controls (button/input/select),
+   which don't inherit font-family by default, and anything dropped in
+   via Tailwind/shadcn utilities. */
+*, *::before, *::after,
+button, input, select, textarea {
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+}
 
 body {
   font-family: 'Manrope', system-ui, -apple-system, sans-serif;
@@ -64,7 +72,7 @@ a { color: inherit; }
   -webkit-mask-image: url('./assets/logo-bos-nav.svg');
   mask-image: url('./assets/logo-bos-nav.svg');
 }
-.invite__logo { display: block; width: min(440px, 70vw); margin: 0 auto; color: var(--ink); }
+.invite__logo { display: block; width: min(248px, 58vw); margin: 0 auto; color: var(--ink); }
 .intro__paper-logo { width: min(240px, 52%); color: var(--ink); margin: 0.5rem 0 0.3rem; }
 .footer__logo { width: min(230px, 60vw); color: #fff; margin-bottom: 1.4rem; }
 
@@ -134,7 +142,10 @@ a { color: inherit; }
 .intro__heading h1 { font-weight: 800; font-size: clamp(1.7rem, 4.6vw, 2.6rem); letter-spacing: -0.7px; }
 .intro__heading p { color: var(--muted); font-weight: 600; margin-top: 0.3rem; }
 
-.intro__btn { background: none; border: 0; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.intro__btn { background: none; border: 0; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); }
+/* a little springy lift on hover to say "click me" */
+.intro__btn:hover { transform: translateY(-8px) scale(1.025); }
+.intro__btn:active { transform: translateY(-3px) scale(0.99); }
 .intro__stage {
   position: relative;
   width: min(540px, 88vw);
@@ -220,23 +231,28 @@ a { color: inherit; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: clamp(0.9rem, 3vw, 1.5rem) 1rem 0;
+  padding: clamp(0.8rem, 3vw, 1.4rem) 1rem;
   text-align: center;
+  overflow: hidden;
+  justify-content: center;
+  /* same paper grain as the hero card */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.42 0 0 0 0 0.30 0 0 0 0 0.16 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23p)'/%3E%3C/svg%3E");
   transform-origin: 50% 50%;
   will-change: transform;
 }
-.intro__paper::before {
-  content: "";
-  position: absolute;
-  inset: 8px;
-  border: 1px solid rgba(238, 114, 48, 0.28);
-  border-radius: 8px;
-  pointer-events: none;
-}
 .intro__paper-content { display: flex; flex-direction: column; align-items: center; }
-.intro__paper-flourish { width: min(150px, 56%); color: #D8CBB6; margin-bottom: 0.55rem; }
-.intro__paper .eyebrow { margin-bottom: 0.4rem; }
-.intro__paper-meta { margin-top: 0.5rem; font-weight: 600; color: var(--muted); font-size: clamp(0.78rem, 2vw, 0.92rem); }
+/* the shared InviteContent, shrunk to fit the slip inside the envelope —
+   it scales up with the paper as it grows to fill the screen */
+.intro__paper a, .intro__paper .btn { pointer-events: none; cursor: default; }
+.intro__paper .eyebrow { font-size: 0.5rem; letter-spacing: 1px; margin-bottom: 0.2rem; }
+.intro__paper .invite__title { margin: 0.45rem 0; }
+.intro__paper .invite__logo { width: min(150px, 40vw); }
+.intro__paper .invite__meta { margin-top: 0.5rem; font-size: 0.56rem; line-height: 1.5; }
+.intro__paper .invite__cta { margin-top: 0.55rem; }
+.intro__paper .btn { padding: 0.34rem 0.8rem; font-size: 0.58rem; border-radius: 7px; }
+.intro__paper .invite__presented { margin-top: 0.6rem; padding-top: 0.5rem; gap: 0.35rem; }
+.intro__paper .invite__presented-label { font-size: 0.42rem; letter-spacing: 1px; }
+.intro__paper .invite__paddles { width: 40%; }
 
 .intro__skip { background: none; border: 0; cursor: pointer; font: inherit; font-weight: 600; font-size: 0.88rem; color: var(--muted); }
 .intro__skip:hover { color: var(--ink); }
@@ -244,79 +260,82 @@ a { color: inherit; }
 /* ============================================================
    PAPER SHEET (the opened invitation)
    ============================================================ */
-/* the paper carries a faint acrylic-court speckle texture */
+/* mostly white background; texture lives on the invitation card + court */
 .sheet {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.55 0 0 0 0 0.31 0 0 0 0 0.16 0 0 0 0.055 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
   background-color: var(--paper);
   min-height: 100vh;
 }
 
-/* invitation header — a Hallmark-style greeting card on the paper */
+/* invitation header — a greeting card over a very dim diagonal pattern */
 .invite {
   position: relative;
   text-align: center;
   padding: clamp(2.6rem, 6vw, 4.5rem) 1.25rem;
   border-bottom: 1px solid var(--line);
+  overflow: hidden;
 }
+/* faint diagonal-line pattern — ONLY behind the hero card */
+.invite::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('/assets/grid.svg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 0;
+}
+.invite__card { z-index: 1; }
 .invite__card {
   position: relative;
-  max-width: 760px;
+  max-width: 720px;
   margin: 0 auto;
-  background: #FDFAF4;
+  background-color: #FDFAF4;
+  /* real paper grain — subtle warm fibre noise over the cream */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.42 0 0 0 0 0.30 0 0 0 0 0.16 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23p)'/%3E%3C/svg%3E");
   border: 1px solid #EAE0CF;
   border-radius: 18px;
-  padding: clamp(2.2rem, 5vw, 3.6rem) clamp(1.4rem, 4vw, 3rem);
+  padding: clamp(3rem, 7vw, 5rem) clamp(1.9rem, 6vw, 4rem);
   box-shadow: 0 18px 50px rgba(13, 38, 46, 0.07);
 }
-/* double printed frame, like an engraved card border */
-.invite__card::before {
-  content: "";
-  position: absolute;
-  inset: 12px;
-  border: 1px solid rgba(238, 114, 48, 0.30);
-  border-radius: 12px;
-  pointer-events: none;
+/* DESKTOP: match the landscape proportions of the paper that comes out of the
+   envelope (~1.36:1). Mobile keeps the taller portrait card as-is. */
+@media (min-width: 768px) {
+  .invite__card {
+    max-width: var(--maxw);
+    aspect-ratio: 2.1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.4rem clamp(3rem, 6vw, 5rem);
+  }
+  .invite__card .invite__title { margin: 1.3rem 0; }
+  .invite__card .invite__meta { margin-top: 1.2rem; }
+  .invite__card .invite__cta { margin-top: 1.3rem; }
+  .invite__card .invite__presented { margin-top: 1.4rem; padding-top: 1.1rem; }
 }
-.invite__card::after {
-  content: "";
-  position: absolute;
-  inset: 17px;
-  border: 1px solid rgba(238, 114, 48, 0.15);
-  border-radius: 9px;
-  pointer-events: none;
+/* generous breathing room around the main hero logo */
+.invite__title { margin: clamp(2.2rem, 6vw, 3.4rem) 0; }
+.invite__meta { margin-top: clamp(1.8rem, 5vw, 2.6rem); font-weight: 500; line-height: 1.75; color: var(--ink); }
+.invite__cta { margin-top: clamp(1.8rem, 5vw, 2.4rem); display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
+
+/* clickable venue address — opens in Maps */
+.invite__address {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(236, 112, 49, 0.5);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s ease, color 0.15s ease;
 }
-
-/* corner ornaments sitting on the outer frame */
-.invite__corner {
-  position: absolute;
-  width: 7px;
-  height: 7px;
-  background: var(--orange);
-  transform: rotate(45deg);
-  z-index: 1;
-}
-.invite__corner--tl { top: 9px; left: 9px; }
-.invite__corner--tr { top: 9px; right: 9px; }
-.invite__corner--bl { bottom: 9px; left: 9px; }
-.invite__corner--br { bottom: 9px; right: 9px; }
-
-/* wax-seal emblem */
-.invite__seal { position: relative; display: block; width: 62px; margin: 0 auto 1.1rem; }
-.invite__seal svg { display: block; width: 100%; height: auto; filter: drop-shadow(0 3px 4px rgba(13, 38, 46, 0.14)); }
-
-.invite__flourish { display: block; width: min(200px, 50vw); margin: 1.3rem auto 0; color: #CDBFA6; }
-
-.invite__title { margin-top: 0.4rem; }
-.invite__meta { margin-top: 1.5rem; font-weight: 700; line-height: 1.55; }
-.invite__cta { margin-top: 1.5rem; display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
-.invite__sig { margin-top: 1.6rem; font-style: italic; color: var(--muted); line-height: 1.55; }
-.invite__sig strong { color: var(--ink); font-style: normal; font-weight: 700; }
+.invite__address:hover { color: var(--orange); text-decoration-color: var(--orange); }
 
 /* "presented by" footer of the card — the crossed paddles */
 .invite__presented {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(238, 114, 48, 0.18);
+  border-top: 1px solid rgba(236, 112, 49, 0.18);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -354,7 +373,9 @@ a { color: inherit; }
   flex: 1;
   display: grid;
   grid-template-rows: 1fr 1fr;
-  background: var(--orange);
+  background-color: var(--orange);
+  /* gritty acrylic court-surface texture */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23c)'/%3E%3C/svg%3E");
   border: 3px solid #fff;
 }
 .court__half--left  { grid-template-columns: 1.55fr 0.8fr; grid-template-areas: "s1 k" "s2 k"; border-right: none; border-radius: 8px 0 0 8px; }
@@ -431,51 +452,268 @@ a { color: inherit; }
   .court__net { width: auto; height: 6px; flex-basis: 6px; margin: 0 -4px; background: repeating-linear-gradient(to right, var(--ink) 0 7px, rgba(255, 255, 255, 0.55) 7px 10px); }
 }
 
-.rules { padding-top: 0.5rem; }
-.rules h3 { font-weight: 700; font-size: 1.05rem; margin-bottom: 1.1rem; letter-spacing: -0.2px; }
-.rules__list { list-style: none; }
-.rules__list li { position: relative; padding: 0.85rem 0 0.85rem 1.6rem; border-bottom: 1px solid var(--line); color: var(--ink); }
-.rules__list li:last-child { border-bottom: none; }
-.rules__list li::before { content: ""; position: absolute; left: 0; top: 1.35em; width: 6px; height: 6px; background: var(--orange); border-radius: 50%; }
+/* House rules — a numbered rulebook card */
+.rules {
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+}
+.rules__head { margin-bottom: clamp(1.8rem, 4vw, 2.6rem); }
+.rules__title { font-weight: 800; font-size: clamp(1.4rem, 4vw, 1.9rem); letter-spacing: -0.5px; margin-top: 0.3rem; }
+/* numbered grid — reads left→right, then continues on the next row */
+.rules__list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(1.6rem, 4vw, 3.2rem);
+  row-gap: clamp(1.6rem, 4vw, 2.6rem);
+}
+.rule {
+  position: relative;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--line);
+}
+/* the number badge sits on the line, like the reference */
+.rule__no {
+  position: absolute;
+  top: -1.05rem;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 9px;
+  background: var(--orange);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5px;
+}
+.rule__title { font-weight: 700; font-size: 1.02rem; letter-spacing: -0.2px; margin: 0.2rem 0 0.45rem; }
+.rule__desc { margin: 0; color: var(--muted); line-height: 1.55; font-size: 0.94rem; }
+.rule__desc strong { color: var(--ink); font-weight: 700; }
+
+@media (max-width: 600px) {
+  .rules__list { grid-template-columns: minmax(0, 1fr); }
+}
 
 /* presented by */
-.section--panel { max-width: none; background: var(--panel); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.section--panel { max-width: none; background-color: var(--panel); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .section--panel .section__head, .section--panel .companies { max-width: var(--maxw); margin-left: auto; margin-right: auto; }
-.companies { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
-.company { display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(1.5rem, 3vw, 2.2rem); }
-.company__head { display: flex; align-items: center; height: 52px; padding-bottom: 1.3rem; margin-bottom: 1.3rem; border-bottom: 1px solid var(--line); }
-.company__logo img { max-height: 34px; max-width: 180px; width: auto; object-fit: contain; display: block; }
-.company__tagline { font-weight: 700; font-size: 1.05rem; letter-spacing: -0.2px; margin-bottom: 0.6rem; }
-.company__about { color: var(--muted); font-size: 0.97rem; margin-bottom: 1.4rem; }
+.companies { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: clamp(1rem, 2.5vw, 1.5rem); }
+.company {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: clamp(1.5rem, 3.5vw, 2.4rem);
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.company:hover { border-color: #e3d9c8; box-shadow: 0 14px 40px rgba(13, 38, 46, 0.08); transform: translateY(-2px); }
+/* image placeholder at the top of each card */
+.company__media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 9;
+  margin-bottom: clamp(1.3rem, 3vw, 1.8rem);
+  background: #F4F2EE;
+  border: 1px dashed #E0D7C7;
+  border-radius: 12px;
+  color: #C7BCA8;
+}
+.company__head { display: flex; align-items: center; min-height: 44px; margin-bottom: 1.3rem; }
+.company__logo img { max-height: 32px; max-width: 170px; width: auto; object-fit: contain; display: block; }
+.company__tagline { font-weight: 700; font-size: clamp(1.05rem, 2.6vw, 1.2rem); letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 0.7rem; }
+.company__about { color: var(--muted); font-size: 0.97rem; margin-bottom: 1.5rem; }
 .company__facts { margin-bottom: 1.6rem; }
-.company__facts > div { display: flex; justify-content: space-between; gap: 1rem; padding: 0.6rem 0; border-top: 1px solid var(--line); font-size: 0.92rem; }
-.company__facts dt { color: var(--muted); font-weight: 500; }
-.company__facts dd { text-align: right; font-weight: 600; }
+.company__facts > div { display: flex; justify-content: space-between; gap: 1rem; padding: 0.7rem 0; border-top: 1px solid var(--line); font-size: 0.92rem; }
+.company__facts dt { color: var(--muted); font-weight: 500; flex: none; }
+.company__facts dd { text-align: right; font-weight: 600; min-width: 0; overflow-wrap: anywhere; }
 .company__facts a { color: var(--orange-dark); text-decoration: none; }
 .company__facts a:hover { text-decoration: underline; }
-.company__link { margin-top: auto; align-self: flex-start; font-weight: 600; font-size: 0.95rem; color: var(--orange-dark); text-decoration: none; }
-.company__link:hover { color: var(--orange); }
+.company__link {
+  margin-top: auto;
+  align-self: flex-start;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--orange-dark);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.company__link:hover { color: var(--orange); border-color: var(--orange); }
 
 /* who's going — logos render in the AttendeesSlider (Tailwind-based) */
 
 /* faqs */
 .faqs { border-top: 1px solid var(--line); }
 .faq { border-bottom: 1px solid var(--line); }
-.faq summary { cursor: pointer; list-style: none; font-weight: 600; font-size: 1.02rem; padding: 1.15rem 2rem 1.15rem 0; position: relative; }
+.faq summary {
+  cursor: pointer;
+  list-style: none;
+  font-weight: 600;
+  font-size: 1.02rem;
+  padding: 1.15rem 2.4rem 1.15rem 0;
+  position: relative;
+  color: var(--ink);
+  border-radius: 8px;
+  transition: color 0.18s ease, padding-left 0.18s ease, background-color 0.18s ease;
+}
 .faq summary::-webkit-details-marker { display: none; }
-.faq summary::after { content: "+"; position: absolute; right: 0.2rem; top: 50%; transform: translateY(-50%); color: var(--orange); font-size: 1.3rem; font-weight: 400; transition: transform .2s ease; }
-.faq[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+/* hover: tint the row, nudge the question in, and slide + darken the chevron */
+.faq summary:hover { color: var(--orange); background-color: rgba(236, 112, 49, 0.05); padding-left: 0.7rem; }
+.faq summary:hover::after { right: 0.7rem; border-color: var(--orange); }
+.faq[open] summary { color: var(--orange); }
+/* chevron: points right when closed, rotates down when open */
+.faq summary::after {
+  content: "";
+  position: absolute;
+  right: 0.45rem;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border-right: 2.2px solid var(--orange);
+  border-bottom: 2.2px solid var(--orange);
+  transform: translateY(-50%) rotate(-45deg);
+  transition: transform .22s ease, right .18s ease, border-color .18s ease;
+}
+.faq[open] summary::after { transform: translateY(-60%) rotate(45deg); }
 .faq p { padding: 0 0 1.2rem; color: var(--muted); max-width: 640px; }
 .faq a { color: var(--orange-dark); font-weight: 500; }
 
+/* ===== interactive house-rules deck (Mews-style, on white) ===== */
+.proc {
+  background: var(--paper);
+  color: var(--ink);
+  padding: clamp(3.5rem, 8vw, 6rem) clamp(1.25rem, 5vw, 3rem);
+}
+.proc__inner { max-width: var(--maxw); margin: 0 auto; }
+.proc__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin-bottom: clamp(1.8rem, 4vw, 2.8rem);
+}
+.proc__eyebrow {
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 0.8rem;
+}
+.proc__title { color: var(--ink); font-weight: 800; font-size: clamp(1.5rem, 3.6vw, 2.5rem); letter-spacing: -0.5px; line-height: 1.12; }
+.proc__nav { display: flex; gap: 0.6rem; flex: none; }
+.proc__nav button {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background .15s ease, border-color .15s ease;
+}
+.proc__nav button:hover { background: #f3f2f5; border-color: var(--ink); }
+
+.proc__cards { display: flex; gap: clamp(0.55rem, 1vw, 0.9rem); align-items: stretch; }
+.proc__card {
+  position: relative;
+  flex: 1 1 0;
+  min-width: clamp(94px, 10vw, 132px);
+  height: clamp(210px, 28vh, 280px);
+  background: #FEFCF8;
+  color: var(--ink);
+  border: 1px solid #EFE7D8;
+  border-radius: 16px;
+  padding: clamp(1.1rem, 1.7vw, 1.5rem);
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font: inherit;
+}
+.proc__card.is-active { background: #FBE7DA; border-color: rgba(236, 112, 49, 0.28); cursor: default; min-width: 0; }
+.proc__card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; }
+.proc__card-titles { min-width: 0; }
+.proc__card-title { display: block; font-weight: 800; font-size: clamp(0.85rem, 1.1vw, 1.02rem); letter-spacing: -0.2px; line-height: 1.18; }
+.proc__card-no { display: block; margin-top: 0.5rem; font-size: 0.74rem; font-weight: 600; color: rgba(13, 38, 46, 0.45); }
+.proc__check { flex: none; width: 28px; height: 28px; border-radius: 8px; background: var(--ink); display: inline-flex; align-items: center; justify-content: center; }
+.proc__card-foot { display: flex; align-items: flex-end; }
+.proc__card-desc { color: var(--ink); font-size: clamp(0.78rem, 0.9vw, 0.88rem); line-height: 1.5; max-width: 34ch; }
+.proc__plus { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(13, 38, 46, 0.25); display: inline-flex; align-items: center; justify-content: center; font-size: 1.3rem; line-height: 1; color: var(--ink); }
+.proc__track { margin-top: clamp(1.5rem, 3vw, 2.2rem); height: 2px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.proc__track-fill { height: 100%; background: var(--orange); border-radius: 2px; }
+
+@media (max-width: 760px) {
+  .proc__head { flex-direction: column; align-items: flex-start; }
+  /* no arrows or progress bar on mobile */
+  .proc__nav,
+  .proc__track { display: none; }
+  .proc__cards { flex-direction: column; gap: 0.7rem; }
+  .proc__card {
+    flex-basis: auto;              /* size to content (not the base flex:1 1 0) */
+    height: auto;
+    min-width: 0;
+    min-height: 78px;
+    justify-content: flex-start;   /* open box hugs its content at the top */
+    gap: 0.85rem;
+  }
+  .proc__card.is-active { min-height: 0; }
+  .proc__card-desc { max-width: none; }
+  /* toggle (+ / check) sits in the top-right corner of every card */
+  .proc__card-titles { padding-right: 2.6rem; }
+  .proc__plus {
+    position: absolute;
+    top: clamp(1.1rem, 3vw, 1.5rem);
+    right: clamp(1.1rem, 3vw, 1.5rem);
+  }
+}
+
 /* footer */
-.footer { position: relative; overflow: hidden; text-align: center; background-color: var(--orange); background-image: radial-gradient(rgba(0, 0, 0, 0.12) 2px, transparent 2.2px); background-size: 22px 22px; padding: clamp(3.5rem, 8vw, 5.5rem) 1.25rem; }
+.footer {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: min(80vh, 640px);
+  background-color: var(--orange);
+  /* halftone dot-gradient — repeated horizontally at natural size so the dots
+     stay perfectly round at any width; fades into plain orange below */
+  background-image: url('/assets/footer-halftone.svg');
+  background-repeat: repeat-x;
+  background-position: left top;
+  background-size: auto;
+  padding: clamp(3.5rem, 8vw, 5.5rem) 1.25rem;
+}
 .footer > * { position: relative; z-index: 1; }
-.footer__title { color: #fff; font-weight: 800; font-size: clamp(1.9rem, 5vw, 2.8rem); letter-spacing: -0.5px; }
-.footer__tagline { color: rgba(255, 255, 255, 0.92); margin: 0.5rem 0 1.7rem; }
+.footer__title { color: #fff; font-weight: 800; font-size: clamp(1.9rem, 5vw, 2.8rem); letter-spacing: -0.5px; margin-bottom: 1.7rem; }
 .footer .btn { background: #fff; color: var(--ink); }
 .footer .btn:hover { background: var(--ink); color: #fff; }
-.footer__brand { margin-top: 2.2rem; font-size: 0.8rem; color: rgba(255, 255, 255, 0.85); }
+.footer__brand { margin-top: 2.2rem; font-size: 0.82rem; color: rgba(255, 255, 255, 0.9); display: flex; flex-direction: column; align-items: center; gap: 0.3rem; line-height: 1.5; }
+.footer__loc {
+  color: #fff;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.6);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s ease;
+}
+.footer__loc:hover { text-decoration-color: #fff; }
 .footer .x { color: #fff; }
 
-@media (max-width: 600px) { .nav__links { display: none; } }
+@media (max-width: 600px) {
+  .nav__links { display: none; }
+  /* with the links hidden, push the RSVP button to the right edge */
+  .nav .btn--small { margin-left: auto; }
+}

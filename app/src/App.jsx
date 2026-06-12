@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import EnvelopeIntro from './components/EnvelopeIntro.jsx'
 import { AttendeesSlider } from './components/AttendeesSlider.tsx'
+import InviteContent from './components/InviteContent.jsx'
+import ClickSound from './components/ClickSound.jsx'
+import RulesShowcase from './components/RulesShowcase.jsx'
 
 const FAQS = [
   ['Is there a prize?', <>Yes — in addition to earning the title of Best Startup, there will be <span className="tbd">[TBD]</span>.</>],
@@ -21,6 +24,9 @@ export default function App() {
 
   return (
     <>
+      {/* pickleball "pock" on every click */}
+      <ClickSound />
+
       {/* THE ENVELOPE — the landing moment */}
       <AnimatePresence>
         {!opened && <EnvelopeIntro key="intro" onDone={() => setOpened(true)} />}
@@ -33,68 +39,19 @@ export default function App() {
         </a>
         <nav className="nav__links">
           <a href="#details">Details</a>
+          <a href="#house-rules">House rules</a>
           <a href="#partners">Partners</a>
           <a href="#whos-going">Who's going</a>
           <a href="#faqs">FAQs</a>
         </nav>
-        <a href="https://item.app/pickle" className="btn btn--small" target="_blank" rel="noopener">RSVP</a>
+        <a href="https://item.app/pickle" className="btn btn--small" target="_blank" rel="noopener">RSVP your team</a>
       </header>
 
       {/* THE INVITATION PAPER */}
       <div className="sheet" id="top">
         <header className="invite">
           <div className="invite__card">
-            <span className="invite__corner invite__corner--tl" aria-hidden="true" />
-            <span className="invite__corner invite__corner--tr" aria-hidden="true" />
-            <span className="invite__corner invite__corner--bl" aria-hidden="true" />
-            <span className="invite__corner invite__corner--br" aria-hidden="true" />
-
-            <span className="invite__seal" aria-hidden="true">
-              <svg viewBox="0 0 72 72">
-                <circle cx="36" cy="36" r="34" fill="#EE7230" />
-                <circle cx="36" cy="36" r="28.5" fill="none" stroke="#FDFAF4" strokeWidth="1.3" strokeDasharray="1.6 4" />
-                <circle cx="36" cy="36" r="13" fill="#FDFAF4" />
-                <g fill="#EE7230">
-                  <circle cx="36" cy="28.5" r="1.5" />
-                  <circle cx="30" cy="33" r="1.5" />
-                  <circle cx="42" cy="33" r="1.5" />
-                  <circle cx="32.5" cy="40.5" r="1.5" />
-                  <circle cx="39.5" cy="40.5" r="1.5" />
-                </g>
-              </svg>
-            </span>
-
-            <span className="eyebrow">You're cordially invited to</span>
-            <h1 className="invite__title">
-              <span className="sr-only">Battle of the Startups — Pickleball edition</span>
-              <span className="logo-bos invite__logo" aria-hidden="true" />
-            </h1>
-
-            <svg className="invite__flourish" viewBox="0 0 240 18" aria-hidden="true">
-              <line x1="20" y1="9" x2="104" y2="9" stroke="currentColor" strokeWidth="1.2" />
-              <path d="M120 2 L126 9 L120 16 L114 9 Z" fill="#EE7230" />
-              <line x1="136" y1="9" x2="220" y2="9" stroke="currentColor" strokeWidth="1.2" />
-            </svg>
-
-            <p className="invite__meta">
-              Thursday, July 9, 2026 · 5:30–9 PM<br />
-              DinkSF · 554 Fillmore St, San Francisco
-            </p>
-
-            <div className="invite__cta">
-              <a href="https://item.app/pickle" className="btn" target="_blank" rel="noopener">RSVP your team</a>
-              <a href="#details" className="btn btn--ghost">Read the details</a>
-            </div>
-
-            <p className="invite__sig">
-              With love — and a little trash talk,<br />
-              <strong>item × Slash</strong>
-            </p>
-
-            <div className="invite__presented">
-              <span className="invite__presented-label">Presented by</span>
-              <img className="invite__paddles" src="/assets/paddles.png" alt="item and Slash" />
-            </div>
+            <InviteContent />
           </div>
         </header>
 
@@ -102,7 +59,6 @@ export default function App() {
           {/* TOURNAMENT DETAILS */}
           <section className="section" id="details">
             <div className="section__head">
-              <span className="eyebrow">The basics</span>
               <h2>Tournament details</h2>
             </div>
 
@@ -117,7 +73,16 @@ export default function App() {
                 <div className="court__box court__service">
                   <h3>Where</h3>
                   <p className="court__big">DinkSF</p>
-                  <p>554 Fillmore St, San Francisco</p>
+                  <p>
+                    <a
+                      className="invite__address"
+                      href="https://www.google.com/maps/search/?api=1&query=DinkSF%2C%20554%20Fillmore%20St%2C%20San%20Francisco%2C%20CA%2094117"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      554 Fillmore St, San Francisco
+                    </a>
+                  </p>
                 </div>
                 <div className="court__box court__kitchen" aria-hidden="true"><span>32 teams</span></div>
               </div>
@@ -136,31 +101,23 @@ export default function App() {
                 </div>
               </div>
             </div>
-
-            <div className="rules">
-              <h3>The house rules</h3>
-              <ul className="rules__list">
-                <li><strong>Two to a team.</strong> Each startup sends its two finest representatives to carry the banner.</li>
-                <li><strong>Everybody plays.</strong> Pool play feeds an 8-team elimination bracket, so every team is promised at least <strong>three games</strong> before anyone heads home.</li>
-                <li><strong>Quick and lively.</strong> Each match runs <strong>11 minutes</strong> or to <strong>11 points</strong> — whichever arrives first.</li>
-                <li><strong>Come as you are.</strong> Paddles and balls are on us; bring your own lucky pair if you'd rather.</li>
-                <li><strong>Stay a while.</strong> Food and drinks — with and without the spirits — are served all evening.</li>
-                <li><strong>All levels welcome.</strong> First-timers and ringers alike; just tell us your level when you RSVP and we'll seed the brackets fairly.</li>
-                <li><strong>Above all, play kind.</strong> Trash talk encouraged, good sportsmanship required.</li>
-              </ul>
-            </div>
           </section>
+
+          {/* HOUSE RULES — interactive card deck */}
+          <RulesShowcase />
 
           {/* PRESENTED BY */}
           <section className="section section--panel" id="partners">
             <div className="section__head">
-              <span className="eyebrow">Presented by</span>
               <h2>The two startups behind the battle</h2>
               <p className="section__sub">Get to know your hosts.</p>
             </div>
 
             <div className="companies">
               <article className="company">
+                <div className="company__media" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="34" height="34"><path d="M3 5h18v14H3z M3 16l5-5 4 4 3-3 6 6" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" /><circle cx="8.5" cy="9.5" r="1.6" fill="currentColor" /></svg>
+                </div>
                 <div className="company__head">
                   <span className="company__logo"><img src="/assets/logo-item.png" alt="item" /></span>
                 </div>
@@ -179,6 +136,9 @@ export default function App() {
               </article>
 
               <article className="company">
+                <div className="company__media" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="34" height="34"><path d="M3 5h18v14H3z M3 16l5-5 4 4 3-3 6 6" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" /><circle cx="8.5" cy="9.5" r="1.6" fill="currentColor" /></svg>
+                </div>
                 <div className="company__head">
                   <span className="company__logo"><img src="/assets/logo-slash.png" alt="Slash" /></span>
                 </div>
@@ -201,7 +161,6 @@ export default function App() {
           {/* WHO'S GOING */}
           <section className="section" id="whos-going">
             <div className="section__head">
-              <span className="eyebrow">Attendees</span>
               <h2>Who's going?</h2>
               <p className="section__sub">Company logos appear here as teams RSVP. Will yours be on the wall?</p>
             </div>
@@ -216,7 +175,6 @@ export default function App() {
           {/* FAQs */}
           <section className="section" id="faqs">
             <div className="section__head">
-              <span className="eyebrow">Good to know</span>
               <h2>FAQs</h2>
             </div>
             <div className="faqs">
@@ -234,9 +192,19 @@ export default function App() {
         <footer className="footer" id="rsvp">
           <span className="logo-bos footer__logo" role="img" aria-label="Battle of the Startups — Pickleball edition" />
           <h2 className="footer__title">Ready to play?</h2>
-          <p className="footer__tagline">Send your 2 best players. July 9 at DinkSF, San Francisco.</p>
-          <a href="https://item.app/pickle" className="btn" target="_blank" rel="noopener">RSVP at item.app/pickle</a>
-          <p className="footer__brand">item <span className="x">×</span> Slash · July 9, 2026</p>
+          <a href="https://item.app/pickle" className="btn" target="_blank" rel="noopener">RSVP your team</a>
+          <p className="footer__brand">
+            <span className="footer__brand-line">item <span className="x">×</span> Slash</span>
+            <span className="footer__brand-line">July 9, 2026</span>
+            <a
+              className="footer__loc"
+              href="https://www.google.com/maps/search/?api=1&query=DinkSF%2C%20554%20Fillmore%20St%2C%20San%20Francisco%2C%20CA%2094117"
+              target="_blank"
+              rel="noopener"
+            >
+              DinkSF, San Francisco, SF
+            </a>
+          </p>
         </footer>
       </div>
     </>
