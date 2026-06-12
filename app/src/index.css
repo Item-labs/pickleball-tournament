@@ -18,7 +18,7 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 
 /* Manrope everywhere — including form controls (button/input/select),
    which don't inherit font-family by default, and anything dropped in
@@ -408,7 +408,7 @@ a { color: inherit; }
 
 /* the kitchens — non-volley zones holding the big numbers */
 .court__kitchen {
-  background: var(--orange-dark);
+  background: #DD6A2D;   /* the same orange, a hair darker, to set the kitchen apart */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -495,6 +495,8 @@ a { color: inherit; }
 
 @media (max-width: 600px) {
   .rules__list { grid-template-columns: minmax(0, 1fr); }
+  /* a little more clearance under the nav so the invitation reads cleanly */
+  .invite { padding-top: 1.8rem; }
 }
 
 /* presented by */
