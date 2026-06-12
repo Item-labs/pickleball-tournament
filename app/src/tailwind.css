@@ -1,0 +1,6 @@
+/* Tailwind v4 — theme + utilities only.
+   Preflight (base reset) is intentionally skipped so it can't disturb
+   the existing hand-written styles in index.css. */
+@layer theme, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);

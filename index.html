@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Battle of the Startups — Pickleball Edition</title>
+  <meta name="description" content="A 32-team pickleball tournament between SF-based startups. Presented by item × Slash at DinkSF, San Francisco — July 9, 2026. Send your 2 best players." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Battle of the Startups — Pickleball Edition" />
+  <meta property="og:description" content="A 32-team pickleball tournament between SF-based startups. July 9, 2026 at DinkSF · Presented by item × Slash." />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=2" />
+</head>
+<body>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav">
+    <a href="#top" class="nav__brand">Battle<span>of the</span>Startups</a>
+    <nav class="nav__links">
+      <a href="#details">Details</a>
+      <a href="#partners">Partners</a>
+      <a href="#whos-going">Who's going</a>
+      <a href="#faqs">FAQs</a>
+    </nav>
+    <a href="https://item.app/pickle" class="btn btn--small" target="_blank" rel="noopener">RSVP</a>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top">
+    <!-- orange dotted chevron banner -->
+    <div class="hero__banner" aria-hidden="true"></div>
+
+    <div class="hero__content">
+      <h1 class="hero__title">
+        <span class="hero__title-1">Battle <em>of the</em></span>
+        <span class="hero__title-2">Startups</span>
+      </h1>
+      <p class="hero__edition">Pickleball edition</p>
+
+      <p class="hero__presented">Presented by</p>
+
+      <!-- crossed paddles — built in code (SVG); only the brand logos are image assets -->
+      <svg class="paddles" viewBox="0 0 600 560" role="img"
+           aria-label="item crossed with Slash on two pickleball paddles">
+        <defs>
+          <filter id="paddleShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#0D262E" flood-opacity="0.18"/>
+          </filter>
+        </defs>
+
+        <!-- orange neck flowing down from the banner between the paddles -->
+        <path d="M250 -40 L350 -40 L322 250 Q300 300 278 250 Z" fill="#EE7230"/>
+
+        <!-- dark crossed handles (the X) -->
+        <rect x="277" y="250" width="46" height="240" rx="23" fill="#0D262E" transform="rotate(-40 300 360)"/>
+        <rect x="277" y="250" width="46" height="240" rx="23" fill="#0D262E" transform="rotate(40 300 360)"/>
+
+        <!-- left paddle face -->
+        <g transform="rotate(-8 210 200)">
+          <rect x="115" y="92" width="190" height="216" rx="80" fill="#fff" filter="url(#paddleShadow)" stroke="#ECEEF2" stroke-width="2"/>
+          <image href="assets/logo-item.png" x="138" y="172" width="150" height="54"/>
+        </g>
+
+        <!-- right paddle face -->
+        <g transform="rotate(8 390 200)">
+          <rect x="295" y="92" width="190" height="216" rx="80" fill="#fff" filter="url(#paddleShadow)" stroke="#ECEEF2" stroke-width="2"/>
+          <image href="assets/logo-slash.png" x="322" y="173" width="135" height="55"/>
+        </g>
+
+        <!-- small white x between the paddle tops -->
+        <g transform="rotate(45 300 120)" fill="#fff">
+          <rect x="293" y="104" width="14" height="34" rx="6"/>
+          <rect x="283" y="114" width="34" height="14" rx="6"/>
+        </g>
+      </svg>
+
+      <p class="hero__date">7.9.26</p>
+      <p class="hero__tagline">Send your best <strong>2 players</strong> to represent your company.</p>
+
+      <div class="hero__cta">
+        <a href="https://item.app/pickle" class="btn" target="_blank" rel="noopener">RSVP your team</a>
+        <a href="#details" class="btn btn--ghost">See the details</a>
+      </div>
+    </div>
+
+    <!-- faded logo watermark, bottom-left (matches the invitation) -->
+    <span class="hero__watermark" aria-hidden="true">Battle<br><em>of the</em><br>Startups</span>
+  </section>
+
+  <!-- ============ INTRO / ABOUT ============ -->
+  <section class="section intro" id="about">
+    <span class="eyebrow">The Battle of the Startups · Pickleball edition</span>
+    <h2 class="intro__headline">A 32-team pickleball tournament between SF-based startups.</h2>
+    <div class="intro__body">
+      <p>Each team represents their own startup.</p>
+      <p>The prize: <span class="tbd">{TBD}</span> — and the title of <strong>Best Startup</strong>.</p>
+      <p>Leave with the prize, a new customer, or a new partner. Maybe all three.</p>
+    </div>
+    <p class="intro__signoff">See you on July 9th.</p>
+  </section>
+
+  <!-- ============ TOURNAMENT DETAILS ============ -->
+  <section class="section" id="details">
+    <div class="section__head">
+      <span class="eyebrow">The basics</span>
+      <h2>Tournament details</h2>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>When</h3>
+        <p class="card__big">July 9, 2026</p>
+        <p class="muted">Doors 5:15 PM · games start promptly at 5:30 PM, running until 9 PM.</p>
+      </div>
+      <div class="card">
+        <h3>Where</h3>
+        <p class="card__big">DinkSF</p>
+        <p class="muted">554 Fillmore St, San Francisco, CA 94117</p>
+      </div>
+      <div class="card">
+        <h3>Who plays</h3>
+        <p class="card__big">2 per startup</p>
+        <p class="muted">Send your 2 best players to represent.</p>
+      </div>
+    </div>
+
+    <div class="rules">
+      <h3>Format &amp; rules</h3>
+      <ul class="rules__list">
+        <li>Each company fields a team of <strong>2 players</strong>.</li>
+        <li>Group play into an <strong>8-team elimination bracket</strong> — every team is guaranteed at least <strong>3 games</strong>.</li>
+        <li>Games are <strong>11 minutes</strong> long or to <strong>11 points</strong>, whichever comes first.</li>
+        <li>Paddles &amp; balls provided, or you're welcome to bring your own.</li>
+        <li>Food plus non-alcoholic and alcoholic beverages available.</li>
+        <li>All skill levels welcome — you'll be asked to estimate your level when you RSVP.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ PRESENTED BY — COMPANY PROFILES ============ -->
+  <section class="section section--panel" id="partners">
+    <div class="section__head">
+      <span class="eyebrow">Presented by</span>
+      <h2>The two startups behind the battle</h2>
+      <p class="section__sub">Get to know your hosts.</p>
+    </div>
+
+    <div class="companies">
+
+      <!-- item -->
+      <article class="company">
+        <div class="company__head">
+          <span class="company__logo"><img src="assets/logo-item.png" alt="item" /></span>
+        </div>
+        <p class="company__tagline">The agentic CRM that does the work for you.</p>
+        <p class="company__about">
+          item is a CRM with AI agents built in, fed by deep context from all the tools you use.
+          Teach the agents how you work and they handle inbound, outbound, and account maintenance
+          on your behalf — so your team does less data entry and more selling.
+        </p>
+        <dl class="company__facts">
+          <div><dt>Website</dt><dd><a href="https://item.app" target="_blank" rel="noopener">item.app</a></dd></div>
+          <div><dt>Founders</dt><dd>Andres Santanilla &amp; Akshay Guthal</dd></div>
+          <div><dt>Based in</dt><dd>San Francisco</dd></div>
+        </dl>
+        <a class="company__link" href="https://item.app" target="_blank" rel="noopener">Visit item.app →</a>
+      </article>
+
+      <!-- Slash -->
+      <article class="company">
+        <div class="company__head">
+          <span class="company__logo"><img src="assets/logo-slash.png" alt="Slash" /></span>
+        </div>
+        <p class="company__tagline">A higher standard in business finance.</p>
+        <p class="company__about">
+          Slash is America's leading business banking platform. With deposit accounts, free wires
+          and ACH, unlimited virtual cards, stablecoin payments, and a powerful payments API,
+          Slash is available to businesses in 100+ countries.
+        </p>
+        <dl class="company__facts">
+          <div><dt>Website</dt><dd><span class="tbd">[link TBD]</span></dd></div>
+          <div><dt>Founders</dt><dd>Victor Cardenas &amp; Kevin Bai</dd></div>
+          <div><dt>Based in</dt><dd>San Francisco</dd></div>
+        </dl>
+        <a class="company__link" href="#" rel="noopener">Visit Slash →</a>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ WHO'S GOING ============ -->
+  <section class="section" id="whos-going">
+    <div class="section__head">
+      <span class="eyebrow">Attendees</span>
+      <h2>Who's going?</h2>
+      <p class="section__sub">Company logos appear here as teams RSVP. Will yours be on the wall?</p>
+    </div>
+
+    <div class="logo-wall">
+      <div class="logo-slot logo-slot--filled"><img src="assets/logo-item.png" alt="item" /></div>
+      <div class="logo-slot logo-slot--filled"><img src="assets/logo-slash.png" alt="Slash" /></div>
+      <div class="logo-slot logo-slot--empty logo-slot--cta">Your logo here</div>
+      <div class="logo-slot logo-slot--empty">+</div>
+      <div class="logo-slot logo-slot--empty">+</div>
+      <div class="logo-slot logo-slot--empty">+</div>
+    </div>
+
+    <div class="center">
+      <a href="https://item.app/pickle" class="btn" target="_blank" rel="noopener">Claim your spot</a>
+    </div>
+  </section>
+
+  <!-- ============ FAQs ============ -->
+  <section class="section" id="faqs">
+    <div class="section__head">
+      <span class="eyebrow">Good to know</span>
+      <h2>FAQs</h2>
+    </div>
+
+    <div class="faqs">
+      <details class="faq">
+        <summary>Is there a prize?</summary>
+        <p>Yes — in addition to earning the title of Best Startup, there will be <span class="tbd">[TBD]</span>.</p>
+      </details>
+      <details class="faq">
+        <summary>Do I need to be good at pickleball?</summary>
+        <p>No, all levels are welcome. There will be plenty else to do at the event and plenty of cool people to meet.</p>
+      </details>
+      <details class="faq">
+        <summary>Do I have to show up on time?</summary>
+        <p>Yes — games start at 5:30 PM. You'll forfeit any games you miss, and look really bad to whoever you're playing.</p>
+      </details>
+      <details class="faq">
+        <summary>Can other people from my startup come to support?</summary>
+        <p>Yes! We encourage you to bring your team members to cheer you on.</p>
+      </details>
+      <details class="faq">
+        <summary>Who is going?</summary>
+        <p>See the section above for confirmed guests. There will be 32 teams competing, each representing an SF-based startup.</p>
+      </details>
+      <details class="faq">
+        <summary>Why pickleball?</summary>
+        <p>We've met countless founders who love pickleball and claim to be the best — so we're giving them a chance to put their money where their mouth is. This is the first edition of many, so stay tuned.</p>
+      </details>
+      <details class="faq">
+        <summary>Is there a cost to enter?</summary>
+        <p>Nope.</p>
+      </details>
+      <details class="faq">
+        <summary>Where exactly is it and what time?</summary>
+        <p>The venue is DinkSF — you may know it as the Church of Eight Wheels — at 554 Fillmore St, San Francisco, CA 94117. It runs from 5:30–9:30 PM.</p>
+      </details>
+      <details class="faq">
+        <summary>How do we RSVP?</summary>
+        <p>Hit the RSVP button anywhere on this page, or go straight to <a href="https://item.app/pickle" target="_blank" rel="noopener">item.app/pickle</a>.</p>
+      </details>
+      <details class="faq">
+        <summary>What if my question isn't answered here?</summary>
+        <p>Email <a href="mailto:vanessa@useitem.io">vanessa@useitem.io</a> with any other questions or concerns.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER CTA ============ -->
+  <footer class="footer" id="rsvp">
+    <h2 class="footer__title">Ready to play?</h2>
+    <p class="footer__tagline">Send your 2 best players. July 9 at DinkSF, San Francisco.</p>
+    <a href="https://item.app/pickle" class="btn" target="_blank" rel="noopener">RSVP at item.app/pickle</a>
+    <p class="footer__brand">Battle of the Startups · Pickleball edition · item <span class="x">×</span> Slash</p>
+  </footer>
+
+</body>
+</html>
