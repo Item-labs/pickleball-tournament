@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import envelopeUrl from '../assets/envelope.svg'
-import InviteContent from './InviteContent.jsx'
 
 const EASE_OUT = [0.22, 1, 0.36, 1]
 
@@ -99,11 +98,20 @@ export default function EnvelopeIntro({ onDone }) {
         transition={{ duration: 0.4 }}
       >
         <h1>You've got an invitation</h1>
-        <p>Click the envelope to open it</p>
       </motion.div>
 
       <button className="intro__btn" onClick={open} aria-label="Open the invitation">
         <div className="intro__stage">
+          {/* the click cue sits ON the envelope so it's obvious where to tap */}
+          <motion.span
+            className="intro__hint"
+            animate={opening ? { opacity: 0 } : { opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            aria-hidden="true"
+          >
+            <svg viewBox="0 0 24 24" width="15" height="15"><path d="M9 11.5V5.5a1.5 1.5 0 013 0v5m0 0V4a1.5 1.5 0 013 0v6.5m0 0V6a1.5 1.5 0 013 0v8a6 6 0 01-6 6h-1.2a4 4 0 01-2.9-1.2l-3.1-3.3a1.6 1.6 0 012.2-2.3l1.7 1.5V11.5a1.5 1.5 0 013 0" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            Click to open
+          </motion.span>
           {/* gentle float while sealed; settles when opening */}
           <motion.div
             className="env-float"
@@ -165,12 +173,9 @@ export default function EnvelopeIntro({ onDone }) {
               }
               aria-hidden="true"
             >
-              {/* exactly the same content as the hero card (shared component),
-                  so the zoom reads as "zooming into this invitation" and
-                  crossfades seamlessly into the real card */}
-              <div className="intro__paper-content">
-                <InviteContent />
-              </div>
+              {/* the invitation itself, as one image — zooms up to fill the
+                  screen and crossfades into the identical hero image */}
+              <img className="intro__paper-img" src="/assets/invitation.jpg" alt="" />
             </motion.div>
 
             {/* the envelope body in front — the paper emerges from behind it */}

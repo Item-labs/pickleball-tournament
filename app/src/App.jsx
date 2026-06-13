@@ -1,8 +1,7 @@
-import { useState } from 'react'
-import { AnimatePresence } from 'framer-motion'
+import { useState, useEffect } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import EnvelopeIntro from './components/EnvelopeIntro.jsx'
 import { AttendeesSlider } from './components/AttendeesSlider.tsx'
-import InviteContent from './components/InviteContent.jsx'
 import RulesShowcase from './components/RulesShowcase.jsx'
 
 const FAQS = [
@@ -20,6 +19,14 @@ const FAQS = [
 
 export default function App() {
   const [opened, setOpened] = useState(false)
+  const [showNav, setShowNav] = useState(false)
+
+  // the floating-island nav drifts in ~2s after the invitation has landed
+  useEffect(() => {
+    if (!opened) return
+    const t = setTimeout(() => setShowNav(true), 2000)
+    return () => clearTimeout(t)
+  }, [opened])
 
   return (
     <>
@@ -28,27 +35,39 @@ export default function App() {
         {!opened && <EnvelopeIntro key="intro" onDone={() => setOpened(true)} />}
       </AnimatePresence>
 
-      {/* NAV */}
-      <header className="nav">
-        <a href="#top" className="nav__brand" aria-label="Battle of the Startups — top">
-          <span className="logo-bos nav__logo" aria-hidden="true" />
-        </a>
-        <nav className="nav__links">
-          <a href="#details">Details</a>
-          <a href="#house-rules">House rules</a>
-          <a href="#partners">Partners</a>
-          <a href="#whos-going">Who's going</a>
-          <a href="#faqs">FAQs</a>
-        </nav>
-        <a href="https://item.app/pickle" className="btn btn--small" target="_blank" rel="noopener">RSVP your team</a>
-      </header>
+      {/* NAV — a floating island that appears a beat after the hero lands */}
+      <AnimatePresence>
+        {showNav && (
+          <motion.header
+            className="nav nav--float"
+            initial={{ opacity: 0, y: -18 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -18 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <a href="#top" className="nav__brand" aria-label="Battle of the Startups — top">
+              <span className="logo-bos nav__logo" aria-hidden="true" />
+            </a>
+            <nav className="nav__links">
+              <a href="#details">Details</a>
+              <a href="#house-rules">House rules</a>
+              <a href="#partners">Partners</a>
+              <a href="#whos-going">Who's going</a>
+              <a href="#faqs">FAQs</a>
+            </nav>
+            <a href="https://item.app/pickle" className="btn btn--small" target="_blank" rel="noopener">RSVP your team</a>
+          </motion.header>
+        )}
+      </AnimatePresence>
 
-      {/* THE INVITATION PAPER */}
+      {/* THE HERO — the invitation itself, as one image */}
       <div className="sheet" id="top">
-        <header className="invite">
-          <div className="invite__card">
-            <InviteContent />
-          </div>
+        <header className="hero">
+          <img
+            className="hero__img"
+            src="/assets/invitation.jpg"
+            alt="Battle of the Startups — Pickleball edition. Presented by item × Slash. 7.9.26 — send your best 2 players to represent your company."
+          />
         </header>
 
         <main>
