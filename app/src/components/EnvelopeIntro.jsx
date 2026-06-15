@@ -22,8 +22,9 @@ export default function EnvelopeIntro({ onDone }) {
   // px geometry for the rise + grow-to-fullscreen, measured at click time
   const geo = useRef({ riseY: -260, x: 0, y: -380, scale: 4 })
   const [stage, setStage] = useState('closed') // closed | flap | rising | settle | growing
-  // content scale so the slip's content reaches full hero size once it grows
+  // content scale + width so the slip's content matches the hero exactly
   const [contentScale, setContentScale] = useState(0.3)
+  const [contentWidth, setContentWidth] = useState(680)
   const opening = stage !== 'closed'
   const flapOpen = opening                     // flap is open from 'flap' onward
   const emerged = stage === 'rising' || stage === 'settle' || stage === 'growing'
@@ -37,12 +38,15 @@ export default function EnvelopeIntro({ onDone }) {
     return () => { document.body.style.overflow = prev }
   }, [])
 
-  // match the paper-content scale to the grow factor: content × growScale = full
+  // match the paper-content scale + width to the real hero, so the grown slip
+  // is identical to the hero card (same content size on every viewport)
   useEffect(() => {
     if (!paperRef.current) return
     const r = paperRef.current.getBoundingClientRect()
     const growScale = Math.max(window.innerWidth / r.width, window.innerHeight / r.height)
     setContentScale(1 / growScale)
+    const heroCard = document.querySelector('.invite__card')
+    if (heroCard) setContentWidth(heroCard.getBoundingClientRect().width)
   }, [])
 
   function open() {
@@ -80,7 +84,7 @@ export default function EnvelopeIntro({ onDone }) {
       className="intro"
       initial={{ opacity: 1 }}
       animate={{ opacity: growing ? 0 : 1 }}
-      transition={growing ? { delay: 0.78, duration: 0.32, ease: 'easeOut' } : { duration: 0 }}
+      transition={growing ? { delay: 0.86, duration: 0.28, ease: 'easeOut' } : { duration: 0 }}
       exit={{ opacity: 0, transition: { duration: 0.25 } }}
       style={{ pointerEvents: opening ? 'none' : 'auto' }}
     >
@@ -185,7 +189,7 @@ export default function EnvelopeIntro({ onDone }) {
             >
               {/* the same invitation content as the hero, scaled down — it
                   grows back to full size and converts into the full-screen hero */}
-              <div className="intro__paper-content" style={{ '--paper-content-scale': contentScale }}>
+              <div className="intro__paper-content" style={{ width: contentWidth, '--paper-content-scale': contentScale }}>
                 <InviteContent />
               </div>
             </motion.div>
