@@ -22,6 +22,8 @@ export default function EnvelopeIntro({ onDone }) {
   // px geometry for the rise + grow-to-fullscreen, measured at click time
   const geo = useRef({ riseY: -260, x: 0, y: -380, scale: 4 })
   const [stage, setStage] = useState('closed') // closed | flap | rising | settle | growing
+  // content scale so the slip's content reaches full hero size once it grows
+  const [contentScale, setContentScale] = useState(0.3)
   const opening = stage !== 'closed'
   const flapOpen = opening                     // flap is open from 'flap' onward
   const emerged = stage === 'rising' || stage === 'settle' || stage === 'growing'
@@ -33,6 +35,14 @@ export default function EnvelopeIntro({ onDone }) {
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => { document.body.style.overflow = prev }
+  }, [])
+
+  // match the paper-content scale to the grow factor: content × growScale = full
+  useEffect(() => {
+    if (!paperRef.current) return
+    const r = paperRef.current.getBoundingClientRect()
+    const growScale = Math.max(window.innerWidth / r.width, window.innerHeight / r.height) * 1.06
+    setContentScale(1 / growScale)
   }, [])
 
   function open() {
@@ -173,9 +183,9 @@ export default function EnvelopeIntro({ onDone }) {
               }
               aria-hidden="true"
             >
-              {/* the same invitation card as the hero — zooms up to land
-                  exactly on the hero card, so the handoff is seamless */}
-              <div className="intro__paper-content">
+              {/* the same invitation content as the hero, scaled down — it
+                  grows back to full size and converts into the full-screen hero */}
+              <div className="intro__paper-content" style={{ '--paper-content-scale': contentScale }}>
                 <InviteContent />
               </div>
             </motion.div>
