@@ -6,14 +6,14 @@ import InviteContent from './components/InviteContent.jsx'
 import RulesShowcase from './components/RulesShowcase.jsx'
 
 const FAQS = [
-  ['Is there a prize?', <>Yes — in addition to earning the title of Best Startup, there will be <span className="tbd">[TBD]</span>.</>],
+  ['Is there a prize?', <>Yes, in addition to earning the title of Best Startup, there will be <span className="tbd">[TBD]</span>.</>],
   ['Do I need to be good at pickleball?', 'No, all levels are welcome. There will be plenty else to do at the event and plenty of cool people to meet.'],
-  ['Do I have to show up on time?', "Yes — games start at 5:30 PM. You'll forfeit any games you miss, and look really bad to whoever you're playing."],
+  ['Do I have to show up on time?', "Yes, games start at 5:30 PM. You'll forfeit any games you miss, and look really bad to whoever you're playing."],
   ['Can other people from my startup come to support?', 'Yes! We encourage you to bring your team members to cheer you on.'],
-  ['Who is going?', 'See the section above for confirmed guests. There will be 32 teams competing, each representing an SF-based startup.'],
-  ['Why pickleball?', "We've met countless founders who love pickleball and claim to be the best — so we're giving them a chance to put their money where their mouth is. This is the first edition of many, so stay tuned."],
+  ['Who is going?', 'See the section above for confirmed guests. There will be 32 teams competing, each representing an SF based startup.'],
+  ['Why pickleball?', "We've met countless founders who love pickleball and claim to be the best, so we're giving them a chance to put their money where their mouth is. This is the first edition of many, so stay tuned."],
   ['Is there a cost to enter?', 'Nope.'],
-  ['Where exactly is it and what time?', 'The venue is DinkSF — you may know it as the Church of Eight Wheels — at 554 Fillmore St, San Francisco, CA 94117. It runs from 5:30–9:30 PM.'],
+  ['Where exactly is it and what time?', 'The venue is DinkSF, the Church of Eight Wheels, at 554 Fillmore St, San Francisco, CA 94117. It runs from 5:30 to 9:30 PM.'],
   ['How do we RSVP?', <>Hit the RSVP button anywhere on this page, or go straight to <a href="https://app.useitem.io/survey/883538e0-8322-4b29-86b6-8b276ca044f2" target="_blank" rel="noopener">the RSVP form</a>.</>],
   ["What if my question isn't answered here?", <>Email <a href="mailto:vanessa@useitem.io">vanessa@useitem.io</a> with any other questions or concerns.</>],
 ]
@@ -46,7 +46,7 @@ export default function App() {
             exit={{ opacity: 0, y: -18 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
-            <a href="#top" className="nav__brand" aria-label="Battle of the Startups — top">
+            <a href="#top" className="nav__brand" aria-label="Battle of the Startups top">
               <span className="logo-bos nav__logo" aria-hidden="true" />
             </a>
             <nav className="nav__links">
@@ -56,7 +56,7 @@ export default function App() {
               <a href="#whos-going">Who's going</a>
               <a href="#faqs">FAQs</a>
             </nav>
-            <a href="https://app.useitem.io/survey/883538e0-8322-4b29-86b6-8b276ca044f2" className="btn btn--small" target="_blank" rel="noopener">RSVP your team</a>
+            <a href="https://app.useitem.io/survey/883538e0-8322-4b29-86b6-8b276ca044f2" className="btn btn--small" target="_blank" rel="noopener">Lock In Your Team</a>
           </motion.header>
         )}
       </AnimatePresence>
@@ -82,7 +82,7 @@ export default function App() {
                 <div className="court__box court__service">
                   <h3>When</h3>
                   <p className="court__big">July 9, 2026</p>
-                  <p>Doors 5:15 PM · games 5:30–9 PM</p>
+                  <p>Doors 5:15 PM · games 5:30 to 9:30 PM</p>
                 </div>
                 <div className="court__box court__service">
                   <h3>Where</h3>
@@ -106,12 +106,12 @@ export default function App() {
                 <div className="court__box court__service">
                   <h3>Who plays</h3>
                   <p className="court__big">2 per startup</p>
-                  <p>Send your 2 best players to represent.</p>
+                  <p>Send your best 2 players to represent your company</p>
                 </div>
                 <div className="court__box court__service">
                   <h3>The prize</h3>
                   <p className="court__big"><span className="court__tbd">[TBD]</span></p>
-                  <p>Plus the title of Best Startup.</p>
+                  <p>Plus the title of Best Startup</p>
                 </div>
               </div>
             </div>
@@ -130,7 +130,7 @@ export default function App() {
             <div className="companies">
               <article className="company">
                 <div className="company__media company__media--shot">
-                  <img src="/assets/item-product.jpg" alt="item — the agentic CRM" loading="lazy" />
+                  <img src="/assets/item-product.jpg" alt="item, the agentic CRM" loading="lazy" />
                 </div>
                 <div className="company__head">
                   <span className="company__logo"><img src="/assets/logo-item.png" alt="item" /></span>
@@ -139,14 +139,14 @@ export default function App() {
                 <p className="company__about">
                   item is a CRM with AI agents built in, fed by deep context from all the tools you use.
                   Teach the agents how you work and they handle inbound, outbound, and account maintenance
-                  on your behalf — so your team does less data entry and more selling.
+                  on your behalf, so your team does less data entry and more selling.
                 </p>
                 <a className="company__link" href="https://item.app" target="_blank" rel="noopener">Visit item →</a>
               </article>
 
               <article className="company">
                 <div className="company__media company__media--shot">
-                  <img src="/assets/slash-product.jpg" alt="Slash — business banking platform" loading="lazy" />
+                  <img src="/assets/slash-product.jpg" alt="Slash, business banking platform" loading="lazy" />
                 </div>
                 <div className="company__head">
                   <span className="company__logo"><img src="/assets/logo-slash.png" alt="Slash" /></span>
@@ -172,7 +172,7 @@ export default function App() {
             <Bracket />
 
             <div className="center" style={{ marginTop: '2rem' }}>
-              <a href="https://app.useitem.io/survey/883538e0-8322-4b29-86b6-8b276ca044f2" className="btn" target="_blank" rel="noopener">Claim your spot</a>
+              <a href="https://app.useitem.io/survey/883538e0-8322-4b29-86b6-8b276ca044f2" className="btn" target="_blank" rel="noopener">Claim Your Spot</a>
             </div>
           </section>
 
@@ -194,9 +194,9 @@ export default function App() {
 
         {/* FOOTER */}
         <footer className="footer" id="rsvp">
-          <span className="logo-bos footer__logo" role="img" aria-label="Battle of the Startups — Pickleball edition" />
+          <span className="logo-bos footer__logo" role="img" aria-label="Battle of the Startups, Pickleball edition" />
           <h2 className="footer__title">Ready to play?</h2>
-          <a href="https://app.useitem.io/survey/883538e0-8322-4b29-86b6-8b276ca044f2" className="btn" target="_blank" rel="noopener">RSVP your team</a>
+          <a href="https://app.useitem.io/survey/883538e0-8322-4b29-86b6-8b276ca044f2" className="btn" target="_blank" rel="noopener">Lock In Your Team</a>
           <p className="footer__brand">
             <span className="footer__brand-line">item <span className="x">×</span> Slash</span>
             <span className="footer__brand-line">July 9, 2026</span>

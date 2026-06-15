@@ -7,12 +7,12 @@ import { motion, AnimatePresence } from 'framer-motion'
  * with a "+". Click a card — or use the arrows — to open it.
  */
 const STEPS = [
-  ['Two to a team', 'Each startup sends its two finest representatives to carry the banner.'],
-  ['Everybody plays', 'Pool play feeds an 8-team elimination bracket, so every team is guaranteed at least three games before anyone heads home.'],
-  ['Quick & lively', 'Each match runs 11 minutes or to 11 points — whichever arrives first.'],
-  ['Come as you are', 'Paddles and balls are on us; bring your own lucky pair if you’d rather.'],
-  ['Stay a while', 'Food and drinks — with and without the spirits — are served all evening long.'],
-  ['All levels welcome', 'First-timers and ringers alike. Tell us your level when you RSVP and we’ll seed the brackets fairly.'],
+  ['Two to a team', 'Each startup sends its best 2 players to compete on their behalf. Cheerleaders are welcome.'],
+  ['Everybody plays', 'Pool play feeds into an 8 team elimination bracket, so every team is guaranteed at least three games before anyone heads home.'],
+  ['Quick & lively', 'Each match runs 11 minutes or to 11 points, whichever arrives first.'],
+  ['Come as you are', 'We have the equipment handled. Wear appropriate footwear. Matching uniforms are encouraged.'],
+  ['Stay a while', 'Food and drinks, with and without the spirits, are served all evening long.'],
+  ['All levels welcome', 'First timers and ringers alike. Tell us your level when you RSVP and we’ll seed the brackets fairly.'],
   ['Play kind', 'Trash talk encouraged, good sportsmanship required.'],
 ]
 
@@ -32,7 +32,7 @@ export default function RulesShowcase() {
       <div className="proc__inner">
         <div className="proc__head">
           <div>
-            <h2 className="proc__title">Know the rules,<br />before you pick up a paddle.</h2>
+            <h2 className="proc__title">Know the rules<br />before you pick up a paddle.</h2>
           </div>
           <div className="proc__nav">
             <button onClick={() => go(-1)} aria-label="Previous rule">

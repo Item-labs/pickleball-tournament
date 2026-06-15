@@ -359,7 +359,7 @@ a { color: inherit; }
   font-weight: 600;
   color: var(--muted);
 }
-.invite__paddles { display: block; width: min(190px, 55vw); height: auto; }
+.invite__paddles { display: block; width: min(270px, 70vw); height: auto; }
 
 /* ============ SECTIONS ============ */
 .section { max-width: var(--maxw); margin: 0 auto; padding: clamp(3.5rem, 8vw, 6rem) clamp(1.25rem, 4vw, 1.5rem); }
@@ -374,7 +374,7 @@ a { color: inherit; }
 .court {
   display: flex;
   align-items: stretch;
-  background: #7E9387;            /* sage-green apron / out-of-bounds */
+  background: #F4E6D6;            /* light peach apron / out-of-bounds */
   border-radius: 16px;
   padding: clamp(1rem, 3vw, 2rem);
   margin-bottom: 1.8rem;
@@ -386,10 +386,10 @@ a { color: inherit; }
 }
 .court__half {
   flex: 1;
-  min-height: clamp(400px, 54vh, 600px);   /* taller court */
+  min-height: 500px;   /* fixed height — independent of viewport */
   display: grid;
   grid-template-rows: 1fr 1fr;
-  background-color: #3F62B5;   /* blue playing surface */
+  background-color: #E97B40;   /* warm, muted-orange playing surface */
   /* gritty acrylic court-surface texture */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23c)'/%3E%3C/svg%3E");
   border: 3px solid #fff;
@@ -407,13 +407,13 @@ a { color: inherit; }
 .court__service h3 {
   text-transform: uppercase;
   letter-spacing: 1.2px;
-  font-size: 0.7rem;
+  font-size: 0.84rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.78);
-  margin-bottom: 0.4rem;
+  color: rgba(255, 255, 255, 0.82);
+  margin-bottom: 0.45rem;
 }
-.court__big { font-weight: 800; font-size: clamp(1.15rem, 2.6vw, 1.5rem); line-height: 1.1; letter-spacing: -0.4px; margin-bottom: 0.25rem; }
-.court__service p:not(.court__big) { font-size: 0.86rem; color: rgba(255, 255, 255, 0.88); line-height: 1.45; }
+.court__big { font-weight: 800; font-size: clamp(1.45rem, 3vw, 1.95rem); line-height: 1.1; letter-spacing: -0.4px; margin-bottom: 0.3rem; }
+.court__service p:not(.court__big) { font-size: 1rem; color: rgba(255, 255, 255, 0.9); line-height: 1.5; }
 .court__tbd {
   font-size: 0.8em;
   font-weight: 700;
@@ -424,7 +424,7 @@ a { color: inherit; }
 
 /* the kitchens — non-volley zones holding the big numbers */
 .court__kitchen {
-  background: #35539C;   /* the same blue, a hair darker, to set the kitchen apart */
+  background: #DA6531;   /* a hair deeper than the surface, to set the kitchen apart */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -472,7 +472,7 @@ a { color: inherit; }
 @media (max-width: 640px) {
   .court { flex-direction: column; }
   /* stacked halves doubled the height on mobile — keep each one compact */
-  .court__half { min-height: clamp(200px, 26vh, 260px); }
+  .court__half { min-height: 230px; }
   .court__half--left, .court__half--right {
     grid-template-columns: 1fr 1fr;
     grid-template-areas: "s1 s2" "k k";
@@ -553,7 +553,7 @@ a { color: inherit; }
   overflow: hidden;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
-.company:hover { border-color: #e3d9c8; box-shadow: 0 14px 40px rgba(13, 38, 46, 0.08); transform: translateY(-2px); }
+.company:hover { border-color: rgba(255, 79, 0, 0.6); box-shadow: 0 14px 40px rgba(13, 38, 46, 0.08); transform: translateY(-2px); }
 /* image placeholder at the top of each card */
 .company__media {
   display: flex;
