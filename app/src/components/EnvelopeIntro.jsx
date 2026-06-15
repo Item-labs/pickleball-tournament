@@ -41,7 +41,7 @@ export default function EnvelopeIntro({ onDone }) {
   useEffect(() => {
     if (!paperRef.current) return
     const r = paperRef.current.getBoundingClientRect()
-    const growScale = Math.max(window.innerWidth / r.width, window.innerHeight / r.height) * 1.06
+    const growScale = Math.max(window.innerWidth / r.width, window.innerHeight / r.height)
     setContentScale(1 / growScale)
   }, [])
 
@@ -63,7 +63,7 @@ export default function EnvelopeIntro({ onDone }) {
       riseY,
       growX: vw / 2 - cx,
       growY: vh / 2 - cy,
-      scale: Math.max(vw / rect.width, vh / rect.height) * 1.06,
+      scale: Math.max(vw / rect.width, vh / rect.height),
       radius: 0,
     }
 

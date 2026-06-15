@@ -279,12 +279,17 @@ a { color: inherit; }
   transform-origin: 50% 50%;
   will-change: transform;
 }
-/* full-size hero content, then uniformly scaled down to nest inside the slip */
+/* full-size hero content, then uniformly scaled down to nest inside the slip.
+   It lives on its own composited layer (will-change/backface) so the browser
+   rasterizes it at full resolution — it stays crisp (vector-quality) while it
+   scales up instead of pixelating. */
 .intro__paper-content {
   width: 680px;
   max-width: none;
   transform: scale(var(--paper-content-scale, 0.3));
   transform-origin: center;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 .intro__paper a, .intro__paper .btn { pointer-events: none; cursor: default; }
 
