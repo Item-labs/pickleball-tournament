@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import envelopeUrl from '../assets/envelope.svg'
 import InviteContent from './InviteContent.jsx'
+import { Component as Background } from '@/components/ui/background-components'
 
 const EASE_OUT = [0.22, 1, 0.36, 1]
 
@@ -75,8 +76,8 @@ export default function EnvelopeIntro({ onDone }) {
     setStage('flap')                                   // 1. flap opens (on top)
     setTimeout(() => setStage('rising'), 520)           // 2. paper rises fully out (up)
     setTimeout(() => setStage('settle'), 1240)          // 3. comes back down ONTO the envelope
-    setTimeout(() => setStage('growing'), 1760)         // 4. then zoom up onto the hero
-    setTimeout(onDone, 2960)
+    setTimeout(() => setStage('growing'), 1760)         // 4. zoom to the hero size, hold, hand off
+    setTimeout(onDone, 3160)
   }
 
   return (
@@ -84,10 +85,13 @@ export default function EnvelopeIntro({ onDone }) {
       className="intro"
       initial={{ opacity: 1 }}
       animate={{ opacity: growing ? 0 : 1 }}
-      transition={growing ? { delay: 0.86, duration: 0.28, ease: 'easeOut' } : { duration: 0 }}
+      transition={growing ? { delay: 1.05, duration: 0.25, ease: 'easeOut' } : { duration: 0 }}
       exit={{ opacity: 0, transition: { duration: 0.25 } }}
       style={{ pointerEvents: opening ? 'none' : 'auto' }}
     >
+      {/* subtle grid + dots + soft yellow glow behind the envelope */}
+      <Background />
+
       {/* clip shapes traced from the artwork — the flap's tip is a rounded
           bezier and its edges meet the top edge inside the corners */}
       <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">

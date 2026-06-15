@@ -44,7 +44,7 @@ export function AttendeesSlider() {
                 className={tile.className}
               />
             ) : (
-              <span className='whitespace-nowrap rounded-md border border-dashed border-[#f3cdb0] bg-[#fdf3ec] px-3 py-1.5 text-xs font-semibold text-[#EC7031]'>
+              <span className='whitespace-nowrap rounded-md border border-dashed border-[#f3cdb0] bg-[#fdf3ec] px-3 py-1.5 text-xs font-semibold text-[#FF4F00]'>
                 {tile.label}
               </span>
             )}
