@@ -61,13 +61,20 @@ export default function EnvelopeIntro({ onDone }) {
     const stageEl = paperRef.current.closest('.intro__stage')
     const stageTop = stageEl ? stageEl.getBoundingClientRect().top : rect.top
     const riseY = -(rect.bottom - stageTop) - 8
-    // grow from the settled position to fill the screen — becomes the page
+    // grow from the settled position to fill the screen — becomes the page.
+    // target the HERO content's real center (not the viewport center) so the
+    // grown invitation lands exactly where the hero sits — no end-of-grow jump.
     const cx = rect.x + rect.width / 2
     const cy = rect.y + rect.height / 2
+    const heroCard = document.querySelector('.invite__card')
+    const hc = heroCard ? heroCard.getBoundingClientRect() : null
+    const targetX = hc ? hc.x + hc.width / 2 : vw / 2
+    // nudge the landing a few px up to sit exactly where the hero settles
+    const targetY = (hc ? hc.y + hc.height / 2 : vh / 2) - 3
     geo.current = {
       riseY,
-      growX: vw / 2 - cx,
-      growY: vh / 2 - cy,
+      growX: targetX - cx,
+      growY: targetY - cy,
       scale: Math.max(vw / rect.width, vh / rect.height),
       radius: 0,
     }
@@ -127,7 +134,12 @@ export default function EnvelopeIntro({ onDone }) {
             transition={{ duration: 0.3 }}
             aria-hidden="true"
           >
-            <svg viewBox="0 0 24 24" width="15" height="15"><path d="M9 11.5V5.5a1.5 1.5 0 013 0v5m0 0V4a1.5 1.5 0 013 0v6.5m0 0V6a1.5 1.5 0 013 0v8a6 6 0 01-6 6h-1.2a4 4 0 01-2.9-1.2l-3.1-3.3a1.6 1.6 0 012.2-2.3l1.7 1.5V11.5a1.5 1.5 0 013 0" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              {/* click burst above the fingertip */}
+              <path d="M9.5 1.4v2M6.7 2.2l1.1 1.6M12.3 2.2l-1.1 1.6M4.8 4.6l1.9 0.5M14.2 4.6l-1.9 0.5" />
+              {/* hand pointing up — index finger + curled fingers + wrist */}
+              <path d="M8 13.6V7.2a1.5 1.5 0 0 1 3 0v4l1-.2a2 2 0 0 1 2.3 1.3l1.3 3.5a4.5 4.5 0 0 1-4.2 6.1H10a4 4 0 0 1-2.9-1.2l-3.2-3.4a1.6 1.6 0 0 1 2.3-2.3z" />
+            </svg>
             Click to open
           </motion.span>
           {/* gentle float while sealed; settles when opening */}

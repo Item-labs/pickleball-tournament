@@ -21,7 +21,7 @@ export default function InviteContent() {
       </p>
 
       <div className="invite__cta">
-        <a href="https://item.app/pickle" className="btn" target="_blank" rel="noopener">RSVP your team</a>
+        <a href="https://app.useitem.io/survey/883538e0-8322-4b29-86b6-8b276ca044f2" className="btn" target="_blank" rel="noopener">RSVP your team</a>
       </div>
 
       <div className="invite__presented">

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import EnvelopeIntro from './components/EnvelopeIntro.jsx'
-import { AttendeesSlider } from './components/AttendeesSlider.tsx'
+import { Bracket } from './components/Bracket.jsx'
 import InviteContent from './components/InviteContent.jsx'
 import RulesShowcase from './components/RulesShowcase.jsx'
 
@@ -14,7 +14,7 @@ const FAQS = [
   ['Why pickleball?', "We've met countless founders who love pickleball and claim to be the best — so we're giving them a chance to put their money where their mouth is. This is the first edition of many, so stay tuned."],
   ['Is there a cost to enter?', 'Nope.'],
   ['Where exactly is it and what time?', 'The venue is DinkSF — you may know it as the Church of Eight Wheels — at 554 Fillmore St, San Francisco, CA 94117. It runs from 5:30–9:30 PM.'],
-  ['How do we RSVP?', <>Hit the RSVP button anywhere on this page, or go straight to <a href="https://item.app/pickle" target="_blank" rel="noopener">item.app/pickle</a>.</>],
+  ['How do we RSVP?', <>Hit the RSVP button anywhere on this page, or go straight to <a href="https://app.useitem.io/survey/883538e0-8322-4b29-86b6-8b276ca044f2" target="_blank" rel="noopener">the RSVP form</a>.</>],
   ["What if my question isn't answered here?", <>Email <a href="mailto:vanessa@useitem.io">vanessa@useitem.io</a> with any other questions or concerns.</>],
 ]
 
@@ -56,7 +56,7 @@ export default function App() {
               <a href="#whos-going">Who's going</a>
               <a href="#faqs">FAQs</a>
             </nav>
-            <a href="https://item.app/pickle" className="btn btn--small" target="_blank" rel="noopener">RSVP your team</a>
+            <a href="https://app.useitem.io/survey/883538e0-8322-4b29-86b6-8b276ca044f2" className="btn btn--small" target="_blank" rel="noopener">RSVP your team</a>
           </motion.header>
         )}
       </AnimatePresence>
@@ -129,8 +129,8 @@ export default function App() {
 
             <div className="companies">
               <article className="company">
-                <div className="company__media" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" width="34" height="34"><path d="M3 5h18v14H3z M3 16l5-5 4 4 3-3 6 6" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" /><circle cx="8.5" cy="9.5" r="1.6" fill="currentColor" /></svg>
+                <div className="company__media company__media--shot">
+                  <img src="/assets/item-product.jpg" alt="item — the agentic CRM" loading="lazy" />
                 </div>
                 <div className="company__head">
                   <span className="company__logo"><img src="/assets/logo-item.png" alt="item" /></span>
@@ -141,17 +141,12 @@ export default function App() {
                   Teach the agents how you work and they handle inbound, outbound, and account maintenance
                   on your behalf — so your team does less data entry and more selling.
                 </p>
-                <dl className="company__facts">
-                  <div><dt>Website</dt><dd><a href="https://item.app" target="_blank" rel="noopener">item.app</a></dd></div>
-                  <div><dt>Founders</dt><dd>Andres Santanilla &amp; Akshay Guthal</dd></div>
-                  <div><dt>Based in</dt><dd>San Francisco</dd></div>
-                </dl>
-                <a className="company__link" href="https://item.app" target="_blank" rel="noopener">Visit item.app →</a>
+                <a className="company__link" href="https://item.app" target="_blank" rel="noopener">Visit item →</a>
               </article>
 
               <article className="company">
-                <div className="company__media" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" width="34" height="34"><path d="M3 5h18v14H3z M3 16l5-5 4 4 3-3 6 6" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" /><circle cx="8.5" cy="9.5" r="1.6" fill="currentColor" /></svg>
+                <div className="company__media company__media--shot">
+                  <img src="/assets/slash-product.jpg" alt="Slash — business banking platform" loading="lazy" />
                 </div>
                 <div className="company__head">
                   <span className="company__logo"><img src="/assets/logo-slash.png" alt="Slash" /></span>
@@ -162,12 +157,7 @@ export default function App() {
                   and ACH, unlimited virtual cards, stablecoin payments, and a powerful payments API,
                   Slash is available to businesses in 100+ countries.
                 </p>
-                <dl className="company__facts">
-                  <div><dt>Website</dt><dd><span className="tbd">[link TBD]</span></dd></div>
-                  <div><dt>Founders</dt><dd>Victor Cardenas &amp; Kevin Bai</dd></div>
-                  <div><dt>Based in</dt><dd>San Francisco</dd></div>
-                </dl>
-                <a className="company__link" href="#" rel="noopener">Visit Slash →</a>
+                <a className="company__link" href="https://www.slash.com/" target="_blank" rel="noopener">Visit Slash →</a>
               </article>
             </div>
           </section>
@@ -176,13 +166,13 @@ export default function App() {
           <section className="section" id="whos-going">
             <div className="section__head">
               <h2>Who's going?</h2>
-              <p className="section__sub">Company logos appear here as teams RSVP. Will yours be on the wall?</p>
+              <p className="section__sub">The bracket fills up as teams claim their spots. Will yours be in it?</p>
             </div>
 
-            <AttendeesSlider />
+            <Bracket />
 
             <div className="center" style={{ marginTop: '2rem' }}>
-              <a href="https://item.app/pickle" className="btn" target="_blank" rel="noopener">Claim your spot</a>
+              <a href="https://app.useitem.io/survey/883538e0-8322-4b29-86b6-8b276ca044f2" className="btn" target="_blank" rel="noopener">Claim your spot</a>
             </div>
           </section>
 
@@ -206,7 +196,7 @@ export default function App() {
         <footer className="footer" id="rsvp">
           <span className="logo-bos footer__logo" role="img" aria-label="Battle of the Startups — Pickleball edition" />
           <h2 className="footer__title">Ready to play?</h2>
-          <a href="https://item.app/pickle" className="btn" target="_blank" rel="noopener">RSVP your team</a>
+          <a href="https://app.useitem.io/survey/883538e0-8322-4b29-86b6-8b276ca044f2" className="btn" target="_blank" rel="noopener">RSVP your team</a>
           <p className="footer__brand">
             <span className="footer__brand-line">item <span className="x">×</span> Slash</span>
             <span className="footer__brand-line">July 9, 2026</span>

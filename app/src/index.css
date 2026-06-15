@@ -329,7 +329,7 @@ a { color: inherit; }
 }
 /* generous breathing room around the main hero logo */
 .invite__title { margin: clamp(2.2rem, 6vw, 3.4rem) 0; }
-.invite__meta { margin-top: clamp(1.8rem, 5vw, 2.6rem); font-weight: 500; line-height: 1.75; color: var(--ink); }
+.invite__meta { margin-top: clamp(1.8rem, 5vw, 2.6rem); font-weight: 500; font-size: 1.18rem; line-height: 1.7; color: var(--ink); }
 .invite__cta { margin-top: clamp(1.8rem, 5vw, 2.4rem); display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
 
 /* clickable venue address — opens in Maps */
@@ -366,7 +366,7 @@ a { color: inherit; }
 .section + .section { border-top: 1px solid var(--line); }
 
 .section__head { margin-bottom: clamp(2rem, 4vw, 2.8rem); }
-.eyebrow { display: inline-block; text-transform: uppercase; letter-spacing: 1.5px; font-size: 0.72rem; font-weight: 600; color: var(--orange); margin-bottom: 0.7rem; }
+.eyebrow { display: inline-block; text-transform: uppercase; letter-spacing: 1.5px; font-size: 0.82rem; font-weight: 600; color: var(--orange); margin-bottom: 0.7rem; }
 .section__head h2 { font-weight: 800; font-size: clamp(1.7rem, 4.5vw, 2.5rem); letter-spacing: -0.5px; line-height: 1.1; }
 .section__sub { margin-top: 0.7rem; max-width: 480px; color: var(--muted); }
 
@@ -471,6 +471,8 @@ a { color: inherit; }
 
 @media (max-width: 640px) {
   .court { flex-direction: column; }
+  /* stacked halves doubled the height on mobile — keep each one compact */
+  .court__half { min-height: clamp(200px, 26vh, 260px); }
   .court__half--left, .court__half--right {
     grid-template-columns: 1fr 1fr;
     grid-template-areas: "s1 s2" "k k";
@@ -564,6 +566,9 @@ a { color: inherit; }
   border-radius: 12px;
   color: #C7BCA8;
 }
+/* a real product screenshot fills the media slot edge to edge */
+.company__media--shot { padding: 0; border-style: solid; border-color: var(--line); background: #fff; overflow: hidden; }
+.company__media--shot img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
 .company__head { display: flex; align-items: center; min-height: 44px; margin-bottom: 1.3rem; }
 .company__logo img { max-height: 32px; max-width: 170px; width: auto; object-fit: contain; display: block; }
 .company__tagline { font-weight: 700; font-size: clamp(1.05rem, 2.6vw, 1.2rem); letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 0.7rem; }
@@ -585,8 +590,87 @@ a { color: inherit; }
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 .company__link:hover { color: var(--orange); border-color: var(--orange); }
+/* the whole card is a click target: this overlay stretches the link across it,
+   so a click anywhere on the box follows the same link as "Visit X →" */
+.company__link::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.company { cursor: pointer; }
+/* the visible link still gets its own underline on card hover */
+.company:hover .company__link { color: var(--orange); border-color: var(--orange); }
 
-/* who's going — logos render in the AttendeesSlider (Tailwind-based) */
+/* who's going — 32-team, two-sided tournament bracket (absolute layout + SVG lines) */
+/* a framed "viewport" the bracket scrolls inside, so it reads as a slidable panel */
+.bkt-frame {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 12px 36px rgba(13, 38, 46, 0.06);
+  overflow: hidden;
+}
+/* right-edge fade hints there's more bracket to slide to */
+.bkt-frame::after {
+  content: "";
+  position: absolute; top: 0; right: 0; bottom: 0; width: 72px;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), #fff);
+  pointer-events: none; z-index: 2;
+}
+.bkt-frame__hint {
+  position: absolute; right: 14px; bottom: 10px; z-index: 3;
+  font-size: 0.72rem; font-weight: 600; color: var(--muted);
+  background: rgba(255, 255, 255, 0.85); padding: 2px 8px; border-radius: 999px;
+  pointer-events: none;
+}
+.bkt-wrap { overflow-x: auto; overflow-y: hidden; padding: 1.5rem 1.25rem 1.75rem; -webkit-overflow-scrolling: touch; }
+/* a slim, on-brand scrollbar to reinforce the slide affordance */
+.bkt-wrap::-webkit-scrollbar { height: 8px; }
+.bkt-wrap::-webkit-scrollbar-thumb { background: #e0d7c7; border-radius: 99px; }
+.bkt-wrap::-webkit-scrollbar-track { background: transparent; }
+.brk { position: relative; margin: 0 auto; }
+.brk__svg { position: absolute; top: 0; left: 0; pointer-events: none; }
+.brk__svg path { fill: none; stroke: #e4dccd; stroke-width: 2; }
+.brk__label {
+  position: absolute; top: 0; width: 160px; text-align: center;
+  font-size: 0.66rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.1px; color: var(--muted);
+}
+.brk__match { position: absolute; width: 160px; display: flex; flex-direction: column; gap: 8px; z-index: 1; }
+
+.bkt__seat {
+  display: flex; align-items: center; gap: 0.5rem;
+  background: var(--paper); border: 1px solid var(--line);
+  border-radius: 9px; padding: 0.3rem 0.5rem; height: 36px;
+  text-decoration: none; color: var(--ink); overflow: hidden;
+}
+.bkt__logo {
+  flex: none; width: 24px; height: 24px; border-radius: 6px;
+  display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 0.76rem;
+}
+.bkt__name { font-weight: 600; font-size: 0.84rem; letter-spacing: -0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* TBD — quiet placeholder for undecided later-round matchups */
+.bkt__seat--tbd { border-style: dashed; }
+.bkt__seat--tbd .bkt__name { color: var(--muted); font-weight: 500; }
+.bkt__dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: #cfc4b0; margin-left: 1px; }
+
+/* open spots — no box, gray label, and a little pulsing orange dot */
+.bkt__seat--open { border: none; background: transparent; }
+.bkt__seat--open .bkt__name { color: var(--muted); font-weight: 500; }
+.bkt__dot--live { background: var(--orange); position: relative; }
+.bkt__dot--live::after {
+  content: ""; position: absolute; inset: -4px; border-radius: 50%;
+  border: 2px solid var(--orange); opacity: 0.5; animation: bktPulse 1.8s ease-out infinite;
+}
+@keyframes bktPulse { 0% { transform: scale(0.5); opacity: 0.6; } 100% { transform: scale(1.7); opacity: 0; } }
+
+/* champion — the trophy seat in the centre */
+.bkt__seat--champ {
+  height: auto; min-height: 44px;
+  border: 1.5px solid var(--orange);
+  background: linear-gradient(135deg, #fff, #fff4ec);
+  box-shadow: 0 10px 28px rgba(255, 79, 0, 0.16);
+}
+.bkt__trophy { flex: none; width: 24px; height: 24px; color: var(--orange); display: grid; place-items: center; }
+.bkt__seat--champ .bkt__name { color: var(--orange-dark); font-weight: 800; }
 
 /* faqs */
 .faqs { border-top: 1px solid var(--line); }
@@ -683,9 +767,9 @@ a { color: inherit; }
 .proc__card.is-active { background: #FBE7DA; border-color: rgba(255, 79, 0, 0.28); cursor: default; min-width: 0; }
 .proc__card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; }
 .proc__card-titles { min-width: 0; }
-.proc__card-title { display: block; font-weight: 800; font-size: clamp(0.85rem, 1.1vw, 1.02rem); letter-spacing: -0.2px; line-height: 1.18; }
+.proc__card-title { display: block; font-weight: 800; font-size: clamp(1.05rem, 3.2vw, 1.18rem); letter-spacing: -0.2px; line-height: 1.18; }
 .proc__card-no { display: block; margin-top: 0.5rem; font-size: 0.74rem; font-weight: 600; color: rgba(13, 38, 46, 0.45); }
-.proc__check { flex: none; width: 28px; height: 28px; border-radius: 8px; background: var(--ink); display: inline-flex; align-items: center; justify-content: center; }
+.proc__check { flex: none; width: 28px; height: 28px; border-radius: 8px; background: var(--orange); display: inline-flex; align-items: center; justify-content: center; }
 .proc__card-foot { display: flex; align-items: flex-end; }
 .proc__card-desc { color: var(--ink); font-size: clamp(0.78rem, 0.9vw, 0.88rem); line-height: 1.5; max-width: 34ch; }
 .proc__plus { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(13, 38, 46, 0.25); display: inline-flex; align-items: center; justify-content: center; font-size: 1.3rem; line-height: 1; color: var(--ink); }
@@ -728,13 +812,20 @@ a { color: inherit; }
   justify-content: center;
   min-height: min(80vh, 640px);
   background-color: var(--orange);
-  /* halftone dot-gradient — repeated horizontally at natural size so the dots
-     stay perfectly round at any width; fades into plain orange below */
-  background-image: url('/assets/footer-halftone.svg');
-  background-repeat: repeat-x;
-  background-position: left top;
-  background-size: auto;
   padding: clamp(3.5rem, 8vw, 5.5rem) 1.25rem;
+}
+/* halftone top: a grid of soft white dots that fades down into solid orange */
+.footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.22) 1.6px, transparent 2.2px);
+  background-size: 16px 16px;
+  background-position: center top;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.55) 18%, transparent 42%);
+  mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.55) 18%, transparent 42%);
+  pointer-events: none;
 }
 .footer > * { position: relative; z-index: 1; }
 .footer__title { color: #fff; font-weight: 800; font-size: clamp(1.9rem, 5vw, 2.8rem); letter-spacing: -0.5px; margin-bottom: 1.7rem; }

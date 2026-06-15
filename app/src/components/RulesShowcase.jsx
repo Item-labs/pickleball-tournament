@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 /*
@@ -20,6 +20,12 @@ export default function RulesShowcase() {
   const [active, setActive] = useState(0)
   const n = STEPS.length
   const go = (d) => setActive((a) => (a + d + n) % n)
+
+  // auto-advance to the next rule every 5s; any manual change resets the timer
+  useEffect(() => {
+    const t = setTimeout(() => setActive((a) => (a + 1) % n), 5000)
+    return () => clearTimeout(t)
+  }, [active, n])
 
   return (
     <section className="proc" id="house-rules">
