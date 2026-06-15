@@ -286,6 +286,7 @@ a { color: inherit; }
 .intro__paper-content {
   width: 680px;
   max-width: none;
+  flex: none;            /* don't let the flex parent shrink it below 680px */
   transform: scale(var(--paper-content-scale, 0.3));
   transform-origin: center;
   will-change: transform;
