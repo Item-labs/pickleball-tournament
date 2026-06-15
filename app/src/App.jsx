@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import EnvelopeIntro from './components/EnvelopeIntro.jsx'
 import { AttendeesSlider } from './components/AttendeesSlider.tsx'
+import InviteContent from './components/InviteContent.jsx'
 import RulesShowcase from './components/RulesShowcase.jsx'
 
 const FAQS = [
@@ -60,14 +61,12 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* THE HERO — the invitation itself, as one image */}
+      {/* THE HERO — the invitation card */}
       <div className="sheet" id="top">
-        <header className="hero">
-          <img
-            className="hero__img"
-            src="/assets/invitation.jpg"
-            alt="Battle of the Startups — Pickleball edition. Presented by item × Slash. 7.9.26 — send your best 2 players to represent your company."
-          />
+        <header className="invite">
+          <div className="invite__card">
+            <InviteContent />
+          </div>
         </header>
 
         <main>

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import envelopeUrl from '../assets/envelope.svg'
+import InviteContent from './InviteContent.jsx'
 
 const EASE_OUT = [0.22, 1, 0.36, 1]
 
@@ -38,7 +39,6 @@ export default function EnvelopeIntro({ onDone }) {
     if (opening) return
     if (reduce) { onDone(); return }
 
-    // measure the paper so the grow phase covers the viewport exactly
     const rect = paperRef.current.getBoundingClientRect()
     const vw = window.innerWidth
     const vh = window.innerHeight
@@ -46,8 +46,7 @@ export default function EnvelopeIntro({ onDone }) {
     const stageEl = paperRef.current.closest('.intro__stage')
     const stageTop = stageEl ? stageEl.getBoundingClientRect().top : rect.top
     const riseY = -(rect.bottom - stageTop) - 8
-    // grow starts from the SETTLED position (paper back at y:0, centred on the
-    // envelope) — so center that resting paper into the viewport, then scale
+    // grow from the settled position to fill the screen — becomes the page
     const cx = rect.x + rect.width / 2
     const cy = rect.y + rect.height / 2
     geo.current = {
@@ -55,14 +54,15 @@ export default function EnvelopeIntro({ onDone }) {
       growX: vw / 2 - cx,
       growY: vh / 2 - cy,
       scale: Math.max(vw / rect.width, vh / rect.height) * 1.06,
+      radius: 0,
     }
 
     // sequential, but snappy — the paper doesn't dawdle inside the envelope
     setStage('flap')                                   // 1. flap opens (on top)
     setTimeout(() => setStage('rising'), 520)           // 2. paper rises fully out (up)
     setTimeout(() => setStage('settle'), 1240)          // 3. comes back down ONTO the envelope
-    setTimeout(() => setStage('growing'), 1760)         // 4. then zoom to fill screen
-    setTimeout(onDone, 2680)
+    setTimeout(() => setStage('growing'), 1760)         // 4. then zoom up onto the hero
+    setTimeout(onDone, 2960)
   }
 
   return (
@@ -70,7 +70,7 @@ export default function EnvelopeIntro({ onDone }) {
       className="intro"
       initial={{ opacity: 1 }}
       animate={{ opacity: growing ? 0 : 1 }}
-      transition={growing ? { delay: 0.62, duration: 0.32, ease: 'easeOut' } : { duration: 0 }}
+      transition={growing ? { delay: 0.78, duration: 0.32, ease: 'easeOut' } : { duration: 0 }}
       exit={{ opacity: 0, transition: { duration: 0.25 } }}
       style={{ pointerEvents: opening ? 'none' : 'auto' }}
     >
@@ -155,7 +155,7 @@ export default function EnvelopeIntro({ onDone }) {
               style={{ zIndex: onTop ? 6 : 2 }}
               animate={
                 growing
-                  ? { x: geo.current.growX, y: geo.current.growY, scale: geo.current.scale, borderRadius: 0 }
+                  ? { x: geo.current.growX, y: geo.current.growY, scale: geo.current.scale, borderRadius: geo.current.radius }
                   : stage === 'settle'
                     ? { x: 0, y: 0, scale: 1 }            // back down onto the envelope
                     : stage === 'rising'
@@ -173,9 +173,11 @@ export default function EnvelopeIntro({ onDone }) {
               }
               aria-hidden="true"
             >
-              {/* the invitation itself, as one image — zooms up to fill the
-                  screen and crossfades into the identical hero image */}
-              <img className="intro__paper-img" src="/assets/invitation.jpg" alt="" />
+              {/* the same invitation card as the hero — zooms up to land
+                  exactly on the hero card, so the handoff is seamless */}
+              <div className="intro__paper-content">
+                <InviteContent />
+              </div>
             </motion.div>
 
             {/* the envelope body in front — the paper emerges from behind it */}
