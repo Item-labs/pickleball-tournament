@@ -151,11 +151,11 @@ export default function App() {
                 <div className="company__head">
                   <span className="company__logo"><img src="/assets/logo-slash.png" alt="Slash" /></span>
                 </div>
-                <p className="company__tagline">A higher standard in business finance.</p>
+                <p className="company__tagline">The financial platform for modern businesses.</p>
                 <p className="company__about">
-                  Slash is America's leading business banking platform. With deposit accounts, free wires
-                  and ACH, unlimited virtual cards, stablecoin payments, and a powerful payments API,
-                  Slash is available to businesses in 100+ countries.
+                  Slash is the fastest growing financial platform in America. Trusted by 10,000+ businesses
+                  across 100+ countries, Slash helps companies maximize cash, streamline operations, and
+                  scale faster through a unified platform for banking, cards, treasury, payments, and automation.
                 </p>
                 <a className="company__link" href="https://www.slash.com/" target="_blank" rel="noopener">Visit Slash →</a>
               </article>
