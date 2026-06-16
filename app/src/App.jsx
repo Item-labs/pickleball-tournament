@@ -6,7 +6,7 @@ import InviteContent from './components/InviteContent.jsx'
 import RulesShowcase from './components/RulesShowcase.jsx'
 
 const FAQS = [
-  ['Is there a prize?', 'Yes! $2k, $1k, and $500 for 1st, 2nd, and 3rd place, all paid into your Slash account. Plus the title of Best Startup.'],
+  ['Is there a prize?', 'Yes! $2k, $1k, and $500 for 1st, 2nd, and 3rd place, in a Slash account. Plus the title of Best Startup.'],
   ['Do I need to be good at pickleball?', 'No, all levels are welcome. There will be plenty else to do at the event and plenty of cool people to meet.'],
   ['Do I have to show up on time?', "Yes, games start at 5:30 PM. You'll forfeit any games you miss, and look really bad to whoever you're playing."],
   ['Can other people from my startup come to support?', 'Yes! We encourage you to bring your team members to cheer you on.'],
@@ -111,7 +111,7 @@ export default function App() {
                 <div className="court__box court__service">
                   <h3>The prize</h3>
                   <p className="court__big">$2k · $1k · $500</p>
-                  <p>For 1st, 2nd and 3rd, paid into your Slash account.</p>
+                  <p>For 1st, 2nd and 3rd, in a Slash account.</p>
                 </div>
               </div>
             </div>
