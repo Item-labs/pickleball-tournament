@@ -6,7 +6,7 @@ import InviteContent from './components/InviteContent.jsx'
 import RulesShowcase from './components/RulesShowcase.jsx'
 
 const FAQS = [
-  ['Is there a prize?', <>Yes, in addition to earning the title of Best Startup, there will be <span className="tbd">[TBD]</span>.</>],
+  ['Is there a prize?', 'Yes! $2k, $1k, and $500 for 1st, 2nd, and 3rd place, all paid into your Slash account. Plus the title of Best Startup.'],
   ['Do I need to be good at pickleball?', 'No, all levels are welcome. There will be plenty else to do at the event and plenty of cool people to meet.'],
   ['Do I have to show up on time?', "Yes, games start at 5:30 PM. You'll forfeit any games you miss, and look really bad to whoever you're playing."],
   ['Can other people from my startup come to support?', 'Yes! We encourage you to bring your team members to cheer you on.'],
@@ -52,9 +52,9 @@ export default function App() {
             <nav className="nav__links">
               <a href="#details">Details</a>
               <a href="#house-rules">House rules</a>
-              <a href="#partners">Partners</a>
               <a href="#whos-going">Who's going</a>
               <a href="#faqs">FAQs</a>
+              <a href="#partners">Partners</a>
             </nav>
             <a href="https://app.useitem.io/survey/883538e0-8322-4b29-86b6-8b276ca044f2" className="btn btn--small" target="_blank" rel="noopener">Lock In Your Team</a>
           </motion.header>
@@ -110,8 +110,8 @@ export default function App() {
                 </div>
                 <div className="court__box court__service">
                   <h3>The prize</h3>
-                  <p className="court__big"><span className="court__tbd">[TBD]</span></p>
-                  <p>Plus the title of Best Startup</p>
+                  <p className="court__big">$2k · $1k · $500</p>
+                  <p>For 1st, 2nd and 3rd, paid into your Slash account.</p>
                 </div>
               </div>
             </div>
@@ -120,11 +120,38 @@ export default function App() {
           {/* HOUSE RULES — interactive card deck */}
           <RulesShowcase />
 
-          {/* PRESENTED BY */}
+          {/* WHO'S GOING */}
+          <section className="section" id="whos-going">
+            <div className="section__head">
+              <h2>Who's going?</h2>
+            </div>
+
+            <Bracket />
+
+            <div className="center" style={{ marginTop: '2rem' }}>
+              <a href="https://app.useitem.io/survey/883538e0-8322-4b29-86b6-8b276ca044f2" className="btn" target="_blank" rel="noopener">Claim Your Spot</a>
+            </div>
+          </section>
+
+          {/* FAQs */}
+          <section className="section" id="faqs">
+            <div className="section__head">
+              <h2>FAQs</h2>
+            </div>
+            <div className="faqs">
+              {FAQS.map(([q, a], i) => (
+                <details className="faq" key={i}>
+                  <summary>{q}</summary>
+                  <p>{a}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+
+          {/* PRESENTED BY — below the FAQs */}
           <section className="section section--panel" id="partners">
             <div className="section__head">
               <h2>The two startups behind the battle</h2>
-              <p className="section__sub">Get to know your hosts.</p>
             </div>
 
             <div className="companies">
@@ -159,35 +186,6 @@ export default function App() {
                 </p>
                 <a className="company__link" href="https://www.slash.com/" target="_blank" rel="noopener">Visit Slash →</a>
               </article>
-            </div>
-          </section>
-
-          {/* WHO'S GOING */}
-          <section className="section" id="whos-going">
-            <div className="section__head">
-              <h2>Who's going?</h2>
-              <p className="section__sub">The bracket fills up as teams claim their spots. Will yours be in it?</p>
-            </div>
-
-            <Bracket />
-
-            <div className="center" style={{ marginTop: '2rem' }}>
-              <a href="https://app.useitem.io/survey/883538e0-8322-4b29-86b6-8b276ca044f2" className="btn" target="_blank" rel="noopener">Claim Your Spot</a>
-            </div>
-          </section>
-
-          {/* FAQs */}
-          <section className="section" id="faqs">
-            <div className="section__head">
-              <h2>FAQs</h2>
-            </div>
-            <div className="faqs">
-              {FAQS.map(([q, a], i) => (
-                <details className="faq" key={i}>
-                  <summary>{q}</summary>
-                  <p>{a}</p>
-                </details>
-              ))}
             </div>
           </section>
         </main>

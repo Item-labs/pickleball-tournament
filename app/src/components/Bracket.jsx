@@ -1,37 +1,6 @@
-/* ── geometry (fixed px so the bracket lays out deterministically; the wrapper
-      scrolls horizontally on smaller screens) ───────────────────────────── */
-const SEAT_W = 160
-const SEAT_H = 36
-const SEAT_GAP = 8
-const MATCH_H = SEAT_H * 2 + SEAT_GAP // 80
-const BASE_GAP = 30                   // breathing room between first-round matches
-const P0 = MATCH_H + BASE_GAP         // round-0 vertical pitch
-const COL_GAP = 50
-const COL_PITCH = SEAT_W + COL_GAP
-const LABEL_H = 34
+import { useRef, useState, useLayoutEffect } from 'react'
 
-const SIDE_ROUNDS = [8, 4, 2, 1]      // match counts per side: R32 → R16 → QF → SF
-const N_COLS = 9                      // 4 left + champion + 4 right
-const TOTAL_W = (N_COLS - 1) * COL_PITCH + SEAT_W
-const TOTAL_H = LABEL_H + SIDE_ROUNDS[0] * MATCH_H + (SIDE_ROUNDS[0] - 1) * BASE_GAP
-const MID_Y = (TOTAL_H - LABEL_H) / 2
-
-// centre Y for each match, by round — later rounds sit at the midpoint of their feeders
-const CENTERS = (() => {
-  const rows = [Array.from({ length: SIDE_ROUNDS[0] }, (_, i) => MATCH_H / 2 + i * P0)]
-  for (let r = 1; r < SIDE_ROUNDS.length; r++) {
-    const prev = rows[r - 1]
-    rows[r] = Array.from({ length: prev.length / 2 }, (_, i) => (prev[2 * i] + prev[2 * i + 1]) / 2)
-  }
-  return rows
-})()
-
-const colX = (c) => c * COL_PITCH
-const leftCol = (r) => r            // round r on the left lives in column r
-const rightCol = (r) => N_COLS - 1 - r // mirrored on the right
-const CHAMP_COL = 4
-
-/* ── invented startups so the field looks alive before real RSVPs land ──── */
+/* invented startups so the field looks alive before real RSVPs land */
 const TEAMS = {
   nimbus: { name: 'Nimbus', mark: 'N', color: '#5B6CF0' },
   forge:  { name: 'Forge',  mark: 'F', color: '#E8743B' },
@@ -51,148 +20,238 @@ const TEAMS = {
   flux:   { name: 'Flux',   mark: 'Z', color: '#C2410C' },
 }
 
-const OPEN = { open: true } // an unclaimed seat — pulsing dot + "Open"
+const OPEN = { open: true }
 
-// the 16 first-round seats on each side — a mix of confirmed teams, loud open
-// slots (FOMO), and quiet empty seats still waiting to be filled
-const LEFT_R32 = [
-  { team: 'nimbus' }, OPEN,
-  { team: 'forge' }, { team: 'vertex' },
-  OPEN, { team: 'loop' },
-  { team: 'hatch' }, OPEN,
-  { team: 'pillar' }, OPEN,
-  { team: 'drift' }, OPEN,
-  { team: 'quanta' }, { team: 'atlas' },
-  OPEN, { team: 'reef' },
+const R32 = [
+  { team: 'nimbus' }, OPEN, { team: 'forge' }, { team: 'vertex' }, OPEN, { team: 'loop' }, { team: 'hatch' }, OPEN,
+  { team: 'pillar' }, OPEN, { team: 'drift' }, OPEN, { team: 'quanta' }, { team: 'atlas' }, OPEN, { team: 'reef' },
+  { team: 'pulse' }, OPEN, { team: 'cobalt' }, OPEN, { team: 'ember' }, OPEN, { team: 'mosaic' }, OPEN,
+  { team: 'nova' }, OPEN, { team: 'flux' }, OPEN, OPEN, OPEN, OPEN, OPEN,
 ]
-const RIGHT_R32 = [
-  { team: 'pulse' }, OPEN,
-  { team: 'cobalt' }, OPEN,
-  { team: 'ember' }, OPEN,
-  { team: 'mosaic' }, OPEN,
-  { team: 'nova' }, OPEN,
-  { team: 'flux' }, OPEN,
-  OPEN, OPEN,
-  OPEN, OPEN,
+const LEFT_R32 = R32.slice(0, 16)
+const RIGHT_R32 = R32.slice(16)
+
+/* vertical geometry is fixed; the columns spread horizontally to fill the box */
+const CH = 30, INTRA = 4, INTER = 14
+const PAIR_PITCH = 2 * CH + INTRA + INTER
+const baseCenters = () => {
+  const a = []
+  for (let p = 0; p < 8; p++) { a.push(p * PAIR_PITCH + CH / 2); a.push(p * PAIR_PITCH + CH + INTRA + CH / 2) }
+  return a
+}
+const pairAvg = (a) => { const r = []; for (let i = 0; i < a.length; i += 2) r.push((a[i] + a[i + 1]) / 2); return r }
+const C16 = baseCenters(), C8 = pairAvg(C16), C4 = pairAvg(C8), C2 = pairAvg(C4), C1 = pairAvg(C2)
+const TOTAL_H = 8 * (2 * CH + INTRA) + 7 * INTER
+
+const W_NAME = 178, W_SPOT = 70, W_WIN = 60
+const WIDTHS = [W_NAME, W_SPOT, W_SPOT, W_SPOT, W_SPOT, W_WIN, W_SPOT, W_SPOT, W_SPOT, W_SPOT, W_NAME]
+const CENTERS = [C16, C8, C4, C2, C1, C1, C1, C2, C4, C8, C16]
+
+// each inner slot shows a preview of who advances: "winner of <round> match n"
+const SLOT_ABBR = { 1: 'RD32', 2: 'RD16', 3: 'QF', 4: 'SF', 6: 'SF', 7: 'QF', 8: 'RD16', 9: 'RD32' }
+const seatAt = (slot, k) => {
+  if (slot === 0) return LEFT_R32[k]
+  if (slot === 10) return RIGHT_R32[k]
+  if (slot === 5) return { champ: true }
+  return { prev: `${SLOT_ABBR[slot]} W${k + 1}` }
+}
+
+/* mobile: one round at a time, toggled by tabs (ESPN-style) */
+const ROUND_TABS = [
+  { label: 'Round of 32', count: 16, r32: true },
+  { label: 'Round of 16', count: 8 },
+  { label: 'Quarterfinals', count: 4 },
+  { label: 'Semifinals', count: 2 },
+  { label: 'Final', count: 1 },
 ]
 
-function Seat({ s }) {
+const ABBR = ['RD32', 'RD16', 'QF', 'SF']
+
+const TROPHY = (
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M8 21h8M12 17v4M6 4h12v5a6 6 0 0 1-12 0z" />
+    <path d="M6 6H4a2 2 0 0 0 0 4h2M18 6h2a2 2 0 0 1 0 4h-2" />
+  </svg>
+)
+
+/* ── mobile: a horizontally-scrollable connected bracket; tabs + scroll stay in sync ── */
+const M_CH = 28, M_INTRA = 4
+const M_CARD_H = 2 * M_CH + M_INTRA
+const M_PITCH = M_CARD_H + 16
+const mBase = () => Array.from({ length: 16 }, (_, i) => i * M_PITCH + M_CARD_H / 2)
+const mAvg = (a) => { const r = []; for (let i = 0; i < a.length; i += 2) r.push((a[i] + a[i + 1]) / 2); return r }
+const MC = [mBase()]
+for (let c = 1; c < 5; c++) MC.push(mAvg(MC[c - 1]))
+const M_TOTAL_H = 16 * M_CARD_H + 15 * 16
+const M_CARD_W = 152, M_COL_GAP = 36, M_WIN_W = 56
+const M_COLX = Array.from({ length: 6 }, (_, c) => c * (M_CARD_W + M_COL_GAP))
+const M_TOTAL_W = M_COLX[5] + M_WIN_W
+
+function mobileSegs() {
+  const s = []
+  const v = (x, y1, y2) => s.push({ x1: x, y1, x2: x, y2: y2 })
+  const h = (x1, x2, y) => s.push({ x1, y1: y, x2, y2: y })
+  for (let c = 0; c < 4; c++) {
+    for (let j = 0; j < MC[c + 1].length; j++) {
+      const cR = M_COLX[c] + M_CARD_W, pL = M_COLX[c + 1], mid = (cR + pL) / 2
+      const y1 = MC[c][2 * j], y2 = MC[c][2 * j + 1], py = MC[c + 1][j]
+      h(cR, mid, y1); h(cR, mid, y2); v(mid, y1, y2); h(mid, pL, py)
+    }
+  }
+  h(M_COLX[4] + M_CARD_W, M_COLX[5], MC[4][0])
+  return s
+}
+
+function MCardSeat({ s }) {
+  if (s.team) {
+    const t = TEAMS[s.team]
+    return <div className="mbk2__seat"><span className="hbk__tile" style={{ background: t.color }}>{t.mark}</span><span className="mbk2__nm">{t.name}</span></div>
+  }
+  if (s.open) {
+    return <div className="mbk2__seat mbk2__seat--open"><span className="hbk__dot hbk__dot--live" /><span className="mbk2__nm">Open</span></div>
+  }
+  return <div className="mbk2__seat mbk2__seat--prev" />
+}
+
+function MobileBracket() {
+  const scrollRef = useRef(null)
+  const [active, setActive] = useState(0)
+  const segs = mobileSegs()
+  const cardSeats = (c, j) => (c === 0
+    ? [R32[2 * j], R32[2 * j + 1]]
+    : [{ prev: `${ABBR[c - 1]} W${2 * j + 1}` }, { prev: `${ABBR[c - 1]} W${2 * j + 2}` }])
+  const onScroll = () => {
+    const sc = scrollRef.current
+    if (!sc) return
+    let n = 0, best = Infinity
+    for (let i = 0; i < 5; i++) { const d = Math.abs(M_COLX[i] - sc.scrollLeft); if (d < best) { best = d; n = i } }
+    setActive(n)
+  }
+  const goTo = (i) => { if (scrollRef.current) scrollRef.current.scrollTo({ left: M_COLX[i] - 6, behavior: 'smooth' }) }
+  return (
+    <div className="bkt-frame mbk-frame">
+      <div className="mbk__tabs">
+        {ROUND_TABS.map((t, i) => (
+          <button key={i} className={`mbk__tab${i === active ? ' is-active' : ''}`} onClick={() => goTo(i)}>{t.label}</button>
+        ))}
+      </div>
+      <div className="mbk2__scroll" ref={scrollRef} onScroll={onScroll}>
+        <div className="mbk2" style={{ width: M_TOTAL_W, height: M_TOTAL_H }}>
+          <svg className="mbk2__svg" width={M_TOTAL_W} height={M_TOTAL_H} aria-hidden="true">
+            {segs.map((g, i) => <line key={i} x1={g.x1} y1={g.y1} x2={g.x2} y2={g.y2} />)}
+          </svg>
+          {[0, 1, 2, 3, 4].map((c) => (
+            <div className="mbk2__col" style={{ width: M_CARD_W, height: M_TOTAL_H }} key={c}>
+              {MC[c].map((cy, j) => (
+                <div className="mbk2__card" style={{ top: cy - M_CARD_H / 2, height: M_CARD_H }} key={j}>
+                  {cardSeats(c, j).map((s, si) => <MCardSeat s={s} key={si} />)}
+                </div>
+              ))}
+            </div>
+          ))}
+          <div className="mbk2__col" style={{ width: M_WIN_W, height: M_TOTAL_H }}>
+            <div className="mbk2__champ" style={{ top: MC[4][0] - 22 }}>{TROPHY}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function Cell({ s, slot, top, innerRef }) {
+  const style = { top, height: CH }
+  if (s.champ) return <div className="hbk__champ" style={style} ref={innerRef}>{TROPHY}</div>
+  if (s.prev) return <div className="hbk__cell hbk__spot" style={style} ref={innerRef} />
+  const cls = `hbk__cell hbk__name${slot === 10 ? ' hbk__name--r' : ''}`
   if (s.team) {
     const t = TEAMS[s.team]
     return (
-      <div className="bkt__seat bkt__seat--team">
-        <span className="bkt__logo" style={{ background: t.color }}>{t.mark}</span>
-        <span className="bkt__name">{t.name}</span>
+      <div className={cls} style={style} ref={innerRef} title={t.name}>
+        <span className="hbk__tile" style={{ background: t.color }}>{t.mark}</span>
+        <span className="hbk__nm">{t.name}</span>
       </div>
     )
   }
-  if (s.champ) {
-    return (
-      <div className="bkt__seat bkt__seat--champ">
-        <span className="bkt__trophy" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M8 21h8M12 17v4M6 4h12v5a6 6 0 0 1-12 0z" />
-            <path d="M6 6H4a2 2 0 0 0 0 4h2M18 6h2a2 2 0 0 1 0 4h-2" />
-          </svg>
-        </span>
-        <span className="bkt__name">Your startup?</span>
-      </div>
-    )
-  }
-  if (s.tbd) {
-    return (
-      <div className="bkt__seat bkt__seat--tbd">
-        <span className="bkt__dot" />
-        <span className="bkt__name">TBD</span>
-      </div>
-    )
-  }
-  // an unclaimed seat — no box, gray label, little pulsing orange dot
   return (
-    <div className="bkt__seat bkt__seat--open">
-      <span className="bkt__dot bkt__dot--live" />
-      <span className="bkt__name">Open</span>
+    <div className={cls + ' hbk__name--open'} style={style} ref={innerRef}>
+      <span className="hbk__dot hbk__dot--live" />
+      <span className="hbk__nm">Open</span>
     </div>
   )
-}
-
-function Match({ x, top, seats }) {
-  return (
-    <div className="brk__match" style={{ left: x, top }}>
-      {seats.map((s, i) => <Seat s={s} key={i} />)}
-    </div>
-  )
-}
-
-// build the seat list for a given side + round
-function seatsFor(side, r, matchIndex) {
-  if (r === 0) {
-    const src = side === 'left' ? LEFT_R32 : RIGHT_R32
-    return [src[matchIndex * 2], src[matchIndex * 2 + 1]]
-  }
-  return [{ tbd: true }, { tbd: true }]
 }
 
 export function Bracket() {
-  const matches = []
-  const paths = []
+  const wrapRef = useRef(null)
+  const refs = useRef(new Map())
+  const [segs, setSegs] = useState([])
+  const [w, setW] = useState(0)
 
-  for (const side of ['left', 'right']) {
-    SIDE_ROUNDS.forEach((count, r) => {
-      const col = side === 'left' ? leftCol(r) : rightCol(r)
-      for (let i = 0; i < count; i++) {
-        const top = LABEL_H + CENTERS[r][i] - MATCH_H / 2
-        matches.push({ key: `${side}-${r}-${i}`, x: colX(col), top, seats: seatsFor(side, r, i) })
-
-        // connector from this match to its parent (or to the champion)
-        const y = LABEL_H + CENTERS[r][i]
-        if (r < SIDE_ROUNDS.length - 1) {
-          const py = LABEL_H + CENTERS[r + 1][Math.floor(i / 2)]
-          if (side === 'left') {
-            const sx = colX(col) + SEAT_W, px = colX(col + 1), mx = (sx + px) / 2
-            paths.push(`M${sx},${y} H${mx} V${py} H${px}`)
-          } else {
-            const sx = colX(col), px = colX(col - 1) + SEAT_W, mx = (sx + px) / 2
-            paths.push(`M${sx},${y} H${mx} V${py} H${px}`)
-          }
-        } else {
-          // semifinal → champion (both at mid height, so a straight line)
-          if (side === 'left') paths.push(`M${colX(col) + SEAT_W},${y} H${colX(CHAMP_COL)}`)
-          else paths.push(`M${colX(col)},${y} H${colX(CHAMP_COL) + SEAT_W}`)
+  useLayoutEffect(() => {
+    const wrap = wrapRef.current
+    if (!wrap) return
+    const compute = () => {
+      const base = wrap.getBoundingClientRect()
+      const pos = {}
+      refs.current.forEach((el, key) => {
+        const r = el.getBoundingClientRect()
+        pos[key] = { left: r.left - base.left, right: r.right - base.left, cy: r.top - base.top + r.height / 2 }
+      })
+      const s = []
+      const v = (x, y1, y2) => s.push({ x1: x, y1, x2: x, y2: y2 })
+      const h = (x1, x2, y) => s.push({ x1, y1: y, x2, y2: y })
+      const get = (slot, k) => pos[`${slot}-${k}`]
+      // left half: slot → slot+1, lines run rightward
+      for (let c = 0; c < 4; c++) {
+        for (let k = 0; k < CENTERS[c + 1].length; k++) {
+          const a = get(c, 2 * k), b = get(c, 2 * k + 1), p = get(c + 1, k)
+          if (!a || !b || !p) continue
+          const cR = Math.max(a.right, b.right), pL = p.left, mid = (cR + pL) / 2
+          h(cR, mid, a.cy); h(cR, mid, b.cy); v(mid, a.cy, b.cy); h(mid, pL, p.cy)
         }
       }
-    })
-  }
+      { const a = get(4, 0), p = get(5, 0); if (a && p) h(a.right, p.left, a.cy) }
+      // right half: slot → slot-1, lines run leftward
+      for (let c = 10; c > 6; c--) {
+        for (let k = 0; k < CENTERS[c - 1].length; k++) {
+          const a = get(c, 2 * k), b = get(c, 2 * k + 1), p = get(c - 1, k)
+          if (!a || !b || !p) continue
+          const cL = Math.min(a.left, b.left), pR = p.right, mid = (cL + pR) / 2
+          h(mid, cL, a.cy); h(mid, cL, b.cy); v(mid, a.cy, b.cy); h(pR, mid, p.cy)
+        }
+      }
+      { const a = get(6, 0), p = get(5, 0); if (a && p) h(p.right, a.left, a.cy) }
+      setSegs(s)
+      setW(Math.round(base.width))
+    }
+    compute()
+    const ro = new ResizeObserver(compute)
+    ro.observe(wrap)
+    return () => ro.disconnect()
+  }, [])
 
-  const champTop = LABEL_H + MID_Y - 22
-
-  const labels = [
-    [leftCol(0), 'Round of 32'], [leftCol(1), 'Round of 16'], [leftCol(2), 'Quarterfinals'], [leftCol(3), 'Semifinals'],
-    [CHAMP_COL, 'Champion'],
-    [rightCol(3), 'Semifinals'], [rightCol(2), 'Quarterfinals'], [rightCol(1), 'Round of 16'], [rightCol(0), 'Round of 32'],
-  ]
+  const setRef = (key) => (el) => { if (el) refs.current.set(key, el); else refs.current.delete(key) }
 
   return (
-    <div className="bkt-frame">
-      <div className="bkt-wrap">
-      <div className="brk" style={{ width: TOTAL_W, height: TOTAL_H }}>
-        <svg className="brk__svg" width={TOTAL_W} height={TOTAL_H} aria-hidden="true">
-          {paths.map((d, i) => <path key={i} d={d} />)}
+    <>
+    <div className="bkt-frame hbk-frame">
+      <div className="hbk" ref={wrapRef} style={{ height: TOTAL_H }}>
+        <svg className="hbk__svg" width={w} height={TOTAL_H} aria-hidden="true">
+          {segs.map((g, i) => <line key={i} x1={g.x1} y1={g.y1} x2={g.x2} y2={g.y2} />)}
         </svg>
-
-        {labels.map(([c, text]) => (
-          <span className="brk__label" style={{ left: colX(c) }} key={`${c}-${text}`}>{text}</span>
-        ))}
-
-        {matches.map((m) => <Match key={m.key} x={m.x} top={m.top} seats={m.seats} />)}
-
-        <div className="brk__match" style={{ left: colX(CHAMP_COL), top: champTop }}>
-          <Seat s={{ champ: true }} />
+        <div className="hbk__cols">
+          {CENTERS.map((col, slot) => (
+            <div className="hbk__col" style={{ width: WIDTHS[slot] }} key={slot}>
+              {col.map((cy, k) => (
+                <Cell key={k} s={seatAt(slot, k)} slot={slot} top={cy - CH / 2} innerRef={setRef(`${slot}-${k}`)} />
+              ))}
+              {slot === 5 && <span className="hbk__wlabel" style={{ top: col[0] + CH / 2 + 8 }}>Winner</span>}
+            </div>
+          ))}
         </div>
       </div>
-      </div>
-      <span className="bkt-frame__hint" aria-hidden="true">Slide to explore the full bracket →</span>
     </div>
+    <MobileBracket />
+    </>
   )
 }
 
