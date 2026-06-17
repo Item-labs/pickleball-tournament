@@ -105,7 +105,7 @@ function mobileSegs() {
 function MCardSeat({ s }) {
   if (s.team) {
     const t = TEAMS[s.team]
-    return <div className="mbk2__seat"><span className="hbk__tile" style={{ background: t.color }}>{t.mark}</span><span className="mbk2__nm">{t.name}</span></div>
+    return <div className="mbk2__seat"><span className="hbk__tile" style={{ background: t.color }}>{t.mark}</span><span className="mbk2__nm hbk__nm--blur">{t.name}</span></div>
   }
   if (s.open) {
     return <div className="mbk2__seat mbk2__seat--open"><span className="hbk__dot hbk__dot--live" /><span className="mbk2__nm">Open</span></div>
@@ -166,9 +166,9 @@ function Cell({ s, slot, top, innerRef }) {
   if (s.team) {
     const t = TEAMS[s.team]
     return (
-      <div className={cls} style={style} ref={innerRef} title={t.name}>
+      <div className={cls} style={style} ref={innerRef}>
         <span className="hbk__tile" style={{ background: t.color }}>{t.mark}</span>
-        <span className="hbk__nm">{t.name}</span>
+        <span className="hbk__nm hbk__nm--blur">{t.name}</span>
       </div>
     )
   }
