@@ -913,3 +913,182 @@ a { color: inherit; }
   /* with the links hidden, push the RSVP button to the right edge */
   .nav .btn--small { margin-left: auto; }
 }
+
+/* ===================================================================== */
+/* 3D PICKLEBALL COURT — the whole landing page (redesign-3d)             */
+/* ===================================================================== */
+.c3d {
+  position: relative;
+  height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  padding: clamp(1rem, 3vh, 1.8rem) clamp(1rem, 3vw, 2rem);
+  overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 16%, #fffdf8 0%, #fdfaf4 52%, #f1e8da 100%);
+  color: var(--ink);
+  text-align: center;
+  touch-action: none;
+}
+/* soft light haze at the top: a bright "horizon" so the nav reads and the floor fades into distance */
+.c3d::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 40%;
+  background: linear-gradient(to bottom, #fdfaf4 6%, rgba(253, 250, 244, 0.82) 34%, rgba(253, 250, 244, 0) 100%);
+  z-index: 2; pointer-events: none;
+}
+
+/* top nav bar: logo left, event details centre, RSVP right */
+.c3d__bar { position: relative; z-index: 5; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; }
+.c3d__logo { justify-self: start; width: min(170px, 40vw); color: var(--ink); }
+.c3d__meta { justify-self: center; display: flex; flex-direction: column; gap: 2px; line-height: 1.25; }
+.c3d__meta-top { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: var(--muted); }
+.c3d__meta-top span { color: var(--orange); }
+.c3d__meta-bot { font-size: 0.86rem; font-weight: 600; color: var(--ink); }
+.c3d__meta-bot b { color: var(--orange-dark); }
+.c3d__rsvp { justify-self: end; flex: none; }
+
+/* the 3D stage fills the rest */
+.c3d__scene {
+  position: relative; z-index: 1; place-self: center;
+  width: min(1120px, 94vw); aspect-ratio: 22 / 10; max-height: 100%;
+  perspective: 1500px; cursor: grab;
+}
+.c3d__scene:active { cursor: grabbing; }
+.c3d__court { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+
+/* wood gym floor the court sits on (Church of Eight Wheels) */
+.c3d__floor {
+  position: absolute; inset: -170% -135%; transform: translateZ(-30px);
+  background-color: #c69a63;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(40, 24, 8, 0.32) 0 1.5px, transparent 1.5px 84px),
+    repeating-linear-gradient(0deg, rgba(255, 248, 235, 0.05) 0 42px, rgba(60, 38, 15, 0.06) 42px 84px),
+    repeating-linear-gradient(90deg, rgba(70, 42, 15, 0.06) 0 1px, transparent 1px 5px),
+    linear-gradient(162deg, #d6ac72 0%, #b78649 58%, #9d6f3c 100%);
+  box-shadow: inset 0 0 320px rgba(45, 26, 8, 0.4);
+}
+/* soft contact shadow on the floor under the court */
+.c3d__shadow {
+  position: absolute; inset: -8% -5%; transform: translateZ(-28px);
+  border-radius: 24px;
+  background: radial-gradient(closest-side, rgba(30, 16, 4, 0.5), rgba(30, 16, 4, 0));
+  filter: blur(22px);
+}
+/* the court, as a raised platform with a wood edge */
+.c3d__apron {
+  position: absolute; inset: -9% -6%; border-radius: 14px;
+  background: linear-gradient(160deg, #f4e6d6, #e7d2bb);
+  transform: translateZ(-2px);
+  box-shadow:
+    0 5px 0 #c69a63, 0 10px 0 #ad7f48, 0 15px 0 #946a3a, 0 20px 0 #7c5830,
+    0 44px 50px -20px rgba(35, 18, 4, 0.5);
+}
+.c3d__surface {
+  position: absolute; inset: 0; transform-style: preserve-3d;
+  border-radius: 8px; border: 3px solid #fff; transform: translateZ(2px);
+  background:
+    radial-gradient(120% 80% at 30% 12%, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 55%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.1)),
+    #e97b40;
+}
+
+/* the net, standing up across the middle (navy, like the court on the site) */
+.c3d__net { position: absolute; top: -3%; bottom: -3%; left: 50%; width: 0; transform-style: preserve-3d; }
+.c3d__net i {
+  position: absolute; left: 0; top: 0; height: 100%; width: 46px;
+  transform-origin: left center; transform: rotateY(-90deg);
+  background-color: #16243f;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.4) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0 1px, transparent 1px 5px);
+  border-right: 3px solid #fff;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.3);
+}
+
+/* zones — each a labelled box that opens a section */
+.c3d__zone {
+  position: absolute; transform-style: preserve-3d;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  background: transparent; padding: 0; cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.25s ease;
+}
+.c3d__zone--kitchen { background: #da6531; }
+/* hover simply lifts the box straight up, with a soft shadow — no rotation */
+.c3d__zone:hover { transform: translateZ(60px); border-color: #fff; box-shadow: 0 34px 38px -14px rgba(40, 18, 4, 0.45); }
+.c3d__face {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0.2rem; padding: 0.4rem; color: #fff;
+  transition: background 0.3s ease;
+}
+.c3d__zone:hover .c3d__face { background: rgba(255, 255, 255, 0.16); }
+.c3d__zlabel { font-size: clamp(0.78rem, 1.7vw, 1.15rem); font-weight: 800; letter-spacing: -0.3px; line-height: 1.1; }
+.c3d__zsub { font-size: clamp(0.52rem, 1vw, 0.72rem); color: rgba(255, 255, 255, 0.72); }
+.c3d__zone--kitchen .c3d__zlabel { font-size: clamp(0.7rem, 1.5vw, 1rem); }
+
+.c3d__zone--lt { left: 1.5%; top: 2.5%; width: 31%; height: 45%; }
+.c3d__zone--lb { left: 1.5%; top: 52.5%; width: 31%; height: 45%; }
+.c3d__zone--lk { left: 34.5%; top: 2.5%; width: 14.5%; height: 95%; }
+.c3d__zone--rk { left: 51%; top: 2.5%; width: 14.5%; height: 95%; }
+.c3d__zone--rt { left: 67.5%; top: 2.5%; width: 31%; height: 45%; }
+.c3d__zone--rb { left: 67.5%; top: 52.5%; width: 31%; height: 45%; }
+
+/* the rally: two paddles knocking a ball across the whole court */
+.c3d__rally { position: absolute; inset: 0; transform-style: preserve-3d; pointer-events: none; z-index: 3; }
+.c3d__paddle { position: absolute; top: 50%; width: 72px; transform: translate(-50%, -50%); transform-style: preserve-3d; }
+.c3d__paddle--a { left: 15%; }
+.c3d__paddle--b { left: 85%; transform: translate(-50%, -50%) scaleX(-1); }
+.c3d__paddle-swing { transform-style: preserve-3d; transform-origin: 18% 50%; }
+/* stand the paddle up off the court so it reads as 3D */
+.c3d__paddle-up { transform-style: preserve-3d; transform: rotateY(-90deg); transform-origin: 0% 50%; }
+.c3d__paddle-svg { width: 100%; height: auto; display: block; filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.28)); }
+.c3d__ball { position: absolute; top: 50%; left: 16%; transform: translate(-50%, -50%); transform-style: preserve-3d; }
+.c3d__ball-dot {
+  display: block; width: 17px; height: 17px; border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #f3f97e, #c2d22f);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18), 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+.c3d__ball-shadow { position: absolute; top: 50%; left: 16%; width: 18px; height: 9px; border-radius: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.26); filter: blur(2.5px); }
+
+.c3d__hint { position: absolute; left: 50%; bottom: 0.9rem; transform: translateX(-50%); z-index: 5; font-size: 0.72rem; color: var(--muted); }
+
+/* section panel — full-width white sheet; click the backdrop or × to close */
+.c3d__panel { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: clamp(1rem, 4vh, 2.6rem) clamp(0.8rem, 3vw, 2.4rem); background: rgba(20, 14, 8, 0.55); backdrop-filter: blur(5px); cursor: pointer; }
+.c3d__sheet { width: 100%; max-width: 1400px; max-height: 92vh; display: flex; flex-direction: column; background: #fff; color: var(--ink); border-radius: 18px; overflow: hidden; box-shadow: 0 40px 110px rgba(0, 0, 0, 0.4); text-align: left; cursor: default; }
+.c3d__sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem clamp(1.2rem, 3vw, 2.2rem); border-bottom: 1px solid var(--line); }
+.c3d__sheet-head h2 { font-size: clamp(1.2rem, 3vw, 1.6rem); }
+.c3d__close { flex: none; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: #fff; color: var(--muted); font-size: 1.6rem; line-height: 1; cursor: pointer; }
+.c3d__close:hover { color: var(--orange); border-color: var(--orange); }
+.c3d__sheet-body { padding: clamp(1.3rem, 3vw, 2.2rem); overflow-y: auto; }
+
+/* straightforward rules list */
+.panel-rules { list-style: none; display: flex; flex-direction: column; gap: 1.1rem; max-width: 760px; }
+.panel-rules li { display: flex; gap: 1rem; align-items: flex-start; padding-bottom: 1.1rem; border-bottom: 1px solid var(--line); }
+.panel-rules li:last-child { border-bottom: none; padding-bottom: 0; }
+.panel-rules__no { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--orange); color: #fff; font-weight: 800; display: grid; place-items: center; }
+.panel-rules h3 { font-size: 1.08rem; margin-bottom: 0.25rem; }
+.panel-rules p { color: var(--muted); line-height: 1.5; }
+
+/* panel content */
+.panel-companies { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem; }
+.panel-shot { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 12px; border: 1px solid var(--line); }
+.panel-logo { height: 26px; width: auto; display: block; margin: 1rem 0 0.6rem; }
+.panel-tag { font-weight: 700; margin-bottom: 0.5rem; }
+.panel-companies p { color: var(--muted); font-size: 0.95rem; margin-bottom: 0.8rem; }
+.panel-prose p { margin-bottom: 0.85rem; line-height: 1.6; }
+.panel-prizes { display: flex; flex-direction: column; gap: 0.7rem; max-width: 440px; margin: 0 auto; }
+.panel-prize { display: flex; align-items: baseline; justify-content: space-between; padding: 1rem 1.3rem; background: #fff; border: 1px solid var(--line); border-radius: 12px; }
+.panel-prize__place { font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; }
+.panel-prize__amt { font-size: 1.7rem; font-weight: 800; color: var(--orange-dark); }
+.panel-prize__note { text-align: center; color: var(--muted); margin-top: 0.4rem; }
+
+/* mobile: stand the court up vertically, stack the top bar */
+@media (max-width: 760px) {
+  .c3d__bar { grid-template-columns: 1fr auto; row-gap: 0.6rem; }
+  .c3d__logo { width: min(150px, 42vw); }
+  .c3d__meta { grid-column: 1 / -1; grid-row: 2; justify-self: center; text-align: center; align-items: center; }
+  .c3d__rsvp { padding: 0.6rem 1.1rem; font-size: 0.9rem; }
+  .c3d__scene { aspect-ratio: 10 / 18; width: min(440px, 88vw); }
+  .c3d__surface { transform: rotateZ(90deg); }
+  .c3d__face { transform: rotateZ(-90deg); }
+  .panel-companies { grid-template-columns: 1fr; }
+}
