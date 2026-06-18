@@ -9,13 +9,13 @@ const confirmed = [
   {
     id: 'item',
     description: 'item',
-    image: '/assets/logo-item.png',
+    image: `${import.meta.env.BASE_URL}assets/logo-item.png`,
     className: 'h-7 w-auto',
   },
   {
     id: 'slash',
     description: 'Slash',
-    image: '/assets/logo-slash.png',
+    image: `${import.meta.env.BASE_URL}assets/logo-slash.png`,
     className: 'h-6 w-auto',
   },
 ];

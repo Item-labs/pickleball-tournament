@@ -157,10 +157,10 @@ export default function App() {
             <div className="companies">
               <article className="company">
                 <div className="company__media company__media--shot">
-                  <img src="/assets/item-product.jpg" alt="item, the agentic CRM" loading="lazy" />
+                  <img src={`${import.meta.env.BASE_URL}assets/item-product.jpg`} alt="item, the agentic CRM" loading="lazy" />
                 </div>
                 <div className="company__head">
-                  <span className="company__logo"><img src="/assets/logo-item.png" alt="item" /></span>
+                  <span className="company__logo"><img src={`${import.meta.env.BASE_URL}assets/logo-item.png`} alt="item" /></span>
                 </div>
                 <p className="company__tagline">The agentic CRM that does the work for you.</p>
                 <p className="company__about">
@@ -173,10 +173,10 @@ export default function App() {
 
               <article className="company">
                 <div className="company__media company__media--shot">
-                  <img src="/assets/slash-product.jpg" alt="Slash, business banking platform" loading="lazy" />
+                  <img src={`${import.meta.env.BASE_URL}assets/slash-product.jpg`} alt="Slash, business banking platform" loading="lazy" />
                 </div>
                 <div className="company__head">
-                  <span className="company__logo"><img src="/assets/logo-slash.png" alt="Slash" /></span>
+                  <span className="company__logo"><img src={`${import.meta.env.BASE_URL}assets/logo-slash.png`} alt="Slash" /></span>
                 </div>
                 <p className="company__tagline">The financial platform for modern businesses.</p>
                 <p className="company__about">

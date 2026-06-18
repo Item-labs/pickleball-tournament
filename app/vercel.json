@@ -1,0 +1,8 @@
+{
+  "redirects": [
+    { "source": "/pickle", "destination": "/pickle/", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/((?!pickle).*)", "destination": "https://amount-ice-79009593.figma.site/$1" }
+  ]
+}

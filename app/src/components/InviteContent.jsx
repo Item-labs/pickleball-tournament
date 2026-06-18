@@ -26,7 +26,7 @@ export default function InviteContent() {
 
       <div className="invite__presented">
         <span className="invite__presented-label">Presented by</span>
-        <img className="invite__paddles" src="/assets/paddles-itemxslash.png" alt="item and Slash" />
+        <img className="invite__paddles" src={`${import.meta.env.BASE_URL}assets/paddles-itemxslash.png`} alt="item and Slash" />
       </div>
     </>
   )
