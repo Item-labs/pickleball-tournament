@@ -758,8 +758,8 @@ a { color: inherit; }
 }
 .faq summary::-webkit-details-marker { display: none; }
 /* hover: tint the row, nudge the question in, and slide + darken the chevron */
-.faq summary:hover { color: var(--orange); background-color: rgba(255, 79, 0, 0.05); padding-left: 0.7rem; }
-.faq summary:hover::after { right: 0.7rem; border-color: var(--orange); }
+.faq summary:hover { color: var(--orange); background-color: rgba(255, 79, 0, 0.05); padding-left: 1.35rem; }
+.faq summary:hover::after { right: 1.35rem; border-color: var(--orange); }
 .faq[open] summary { color: var(--orange); }
 /* chevron: points right when closed, rotates down when open */
 .faq summary::after {
@@ -775,7 +775,7 @@ a { color: inherit; }
   transition: transform .22s ease, right .18s ease, border-color .18s ease;
 }
 .faq[open] summary::after { transform: translateY(-60%) rotate(45deg); }
-.faq p { padding: 0 0 1.2rem; color: var(--muted); max-width: 640px; }
+.faq p { padding: 0 2.4rem 1.2rem 0; color: var(--muted); }
 .faq a { color: var(--orange-dark); font-weight: 500; }
 
 /* ===== interactive house-rules deck (Mews-style, on white) ===== */
